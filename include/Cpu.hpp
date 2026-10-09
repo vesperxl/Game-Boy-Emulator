@@ -2,8 +2,8 @@
 #include<cstdint>
 #include "Memory.hpp"
 
-typedef uint8_t reg8;
-typedef uint16_t reg16;
+using reg8 = uint8_t;
+using reg16 = uint16_t;
 
 class Cpu{
 
@@ -25,7 +25,7 @@ private:
     Cpu(Memory &mem);
     void execute();
     void tick();
-    uint8_t fetch(uint16_t adress);
+    uint8_t fetch();
     uint16_t setTo16(uint8_t hi,uint8_t lo);
     uint8_t getFirstByte(reg16 reg);
     uint8_t getSecondByte(reg16 reg);
@@ -35,5 +35,10 @@ private:
     void setC(uint8_t bit);
     reg8 incrementR8(reg8 reg);
     reg8 decrementR8(reg8 reg);
+    uint8_t getZ();
+    uint8_t getN();
+    uint8_t getH();
+    uint8_t getC();
+    reg16 addR16(reg16 A, reg16 B);
     
 };
