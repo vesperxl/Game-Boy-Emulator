@@ -319,6 +319,159 @@ void Cpu::execute(){
         setN(1);
         setH(1);
         break;
+    case 0x30:
+    {
+        int8_t e = fetch();
+        if(!getC()){
+            PC += e;
+            tick();
+        }
+        break;
+    }
+    case 0x31:
+    {
+        uint8_t lo = fetch();
+        uint8_t hi = fetch();
+
+        uint16_t data = setTo16(hi,lo);
+        SP = data;
+
+        break;
+    }
+    case 0x32:
+    {
+        reg16 HL = setTo16(H,L);
+        memory.write(HL,A);
+        HL--;
+        H = getFirstByte(HL);
+        L = getSecondByte(HL);
+        break;
+    }
+    case 0x33:
+        SP++;
+        tick();
+        break;
+    case 0x34:
+    {
+        uint8_t data = memory.read(setTo16(H,L));
+        incrementR8(data);
+        memory.write(setTo16(H,L),data);
+        break;
+    }
+    case 0x35:
+    {
+        uint8_t data = memory.read(setTo16(H,L));
+        decrementR8(data);
+        memory.write(setTo16(H,L),data);
+        break;
+    }
+    case 0x36:
+    {
+        uint8_t data = fetch();
+        memory.write(setTo16(H,L),data);
+        break;
+    }
+    case 0x37:
+        setC(1);
+        break;        
+    case 0x38:
+    {
+        uint8_t e = fetch();
+        if(getC()){
+            PC += e;
+            tick();
+        }
+        break;
+    }
+    case 0x39:
+    {
+        reg16 HL = setTo16(H,L);
+        HL = addR16(SP,HL);
+        H = getFirstByte(HL);
+        L = getSecondByte(HL);
+        tick();
+        break;
+    }
+    case 0x3A:
+    {
+        reg16 HL = setTo16(H,L);
+        A = memory.read(HL);
+        HL--;
+        H = getFirstByte(HL);
+        L = getSecondByte(HL);
+        break;
+    }
+    case 0x3B:
+        SP--;
+        tick();
+        break;
+    case 0x3C:
+        A = incrementR8(A);
+        break;
+    case 0x3D:
+        A = decrementR8(A);
+        break;
+    case 0x3E:
+        A = fetch();
+        break;
+    case 0x3F:
+        setN(0);
+        setH(0);
+        if(getC()){
+            setC(0);
+        }else{
+            setC(1);
+        }
+        break;
+    case 0x40:
+        B = B;
+        break;
+    case 0x41:
+        B = C;
+        break;
+    case 0x42:
+        B = D;
+        break;
+    case 0x43:
+        B = E;
+        break;
+    case 0x44:
+        B = H;
+        break;
+    case 0x45:
+        B = L;
+        break;
+    case 0x46:
+        B = memory.read(setTo16(H,L));
+        break;
+    case 0x47:
+        B = A;
+        break;
+    case 0x48:
+        C = B;
+        break;
+    case 0x49:
+        C = C;
+        break;
+    case 0x4A: 
+        C = D;
+        break;
+    case 0x4B:
+        C = E;
+        break;
+    case 0x4C:
+        C = H;
+        break;
+    case 0x4D:
+        C = L;
+        break;
+    case 0x4E:
+        C = memory.read(setTo16(H,L));
+        break;
+    case 0x4F:
+        C = A;
+        break;
+
     default:
         break;
     }
@@ -401,7 +554,7 @@ reg8 Cpu::decrementR8(reg8 reg){
     if((reg - 1) == 0){
         setZ(1);
     }
-    if((B & 0xF) > 1){
+    if((reg & 0xF) < 1){
         setH(1);
     }
 
