@@ -39,6 +39,13 @@ private:
     uint8_t getN();
     uint8_t getH();
     uint8_t getC();
-    reg16 addR16(reg16 A, reg16 B);
+    reg16 addR16(reg16 regA, reg16 regB);
+    reg8 addR8(reg8 regA, reg8 regB);
+    reg8 adcR8(reg8 regA, reg8 regB);
+    reg8 subR8(reg8 regA, reg8 regB);
+    reg8 sbcR8(reg8 regA, reg8 regB);
+    reg8 andR8(reg8 regA, reg8 regB);
+    reg8 xorR8(reg8 regA, reg8 regB);
+    reg8 orR8(reg8 regA, reg8 regB);
     
 };

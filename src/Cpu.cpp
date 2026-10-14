@@ -471,6 +471,378 @@ void Cpu::execute(){
     case 0x4F:
         C = A;
         break;
+    case 0x50:
+        D = B;
+        break;
+    case 0x51:
+        D = C;
+        break;
+    case 0x52:
+        D = D;
+        break;
+    case 0x53:
+        D = E;
+        break;
+    case 0x54:
+        D = H;
+        break;
+    case 0x55:
+        D = L;
+        break;
+    case 0x56:
+        D = memory.read(setTo16(H,L));
+        break;
+    case 0x57:
+        D = A;
+        break;
+    case 0x58:
+        E = B;
+        break;
+    case 0x59:
+        E = C;
+        break;
+    case 0x5A:
+        E = D;
+        break;
+    case 0x5B:
+        E = E;
+        break;
+    case 0x5C:
+        E = H;
+        break;
+    case 0x5D:
+        E = L;
+        break;
+    case 0x5E:
+        E = memory.read(setTo16(H,L));
+        break;
+    case 0x5F:
+        E = A;
+        break;
+    case 0x60:
+        H = B;
+        break;
+    case 0x61:
+        H = C;
+        break;
+    case 0x62:
+        H = D;
+        break;
+    case 0x63:
+        H = E;
+        break;
+    case 0x64:
+        H = H;
+        break;
+    case 0x65:
+        H = L;
+        break;
+    case 0x66:
+        H = memory.read(setTo16(H,L));
+        break;
+    case 0x67:
+        H = A;
+        break;
+    case 0x68:
+        L = B;
+        break;
+    case 0x69:
+        L = C;
+        break;
+    case 0x6A:
+        L = D;
+        break;
+    case 0x6B:
+        L = E;
+        break;
+    case 0x6C:
+        L = H;
+        break;
+    case 0x6D:
+        L = L;
+        break;
+    case 0x6E:
+        L = memory.read(setTo16(H,L));
+        break;
+    case 0x6F:
+        L = A;
+        break;
+    case 0x70:
+        memory.write(setTo16(H,L), B);
+        break;
+    case 0x71:
+        memory.write(setTo16(H,L), C);
+        break;
+    case 0x72:
+        memory.write(setTo16(H,L), D);
+        break;
+    case 0x73:
+        memory.write(setTo16(H,L), E);
+        break;
+    case 0x74:
+        memory.write(setTo16(H,L), H);
+        break;
+    case 0x75:
+        memory.write(setTo16(H,L), L);
+        break;
+    case 0x76:
+        //TODO
+        //TODO
+        //TODO
+        //TODO
+        //TODO
+        //TODO
+        //TODO
+        //TODO
+        break;
+    case 0x77:
+        memory.write(setTo16(H,L), A);
+        break;
+    case 0x78:  
+        A = B;
+        break;
+    case 0x79:
+        A = C;
+        break;
+    case 0x7A:
+        A = D;
+        break;
+    case 0x7B:
+        A = E;
+        break;
+    case 0x7C:
+        A = H;
+        break;
+    case 0x7D:
+        A = L;
+        break;
+    case 0x7E:
+        A = memory.read(setTo16(H,L));
+        break;
+    case 0x7F:
+        A = A; 
+        break;
+    case 0x80:
+        A = addR8(A,B);
+        break;
+    case 0x81:
+        A = addR8(A,C);
+        break;
+    case 0x82:
+        A = addR8(A,D);
+        break;
+    case 0x83:
+        A = addR8(A,E);
+        break;
+    case 0x84:
+        A = addR8(A,H);
+        break;
+    case 0x85:
+        A = addR8(A,L);
+        break;
+    case 0x86:
+    {
+        uint8_t data = memory.read(setTo16(H,L));
+        A = addR8(A,data);
+        break;
+    }
+    case 0x87:
+        A = addR8(A,A);
+        break;
+    case 0x88:
+        A = adcR8(A,B);
+        break;
+    case 0x89:
+        A = adcR8(A,C);
+        break;
+    case 0x8A:
+        A = adcR8(A,D);
+        break;
+    case 0x8B:
+        A = adcR8(A,E);
+        break;
+    case 0x8C:
+        A = adcR8(A,H);
+        break;
+    case 0x8D:
+        A = adcR8(A,L);
+        break;
+    case 0x8E:
+    {
+        uint8_t data = memory.read(setTo16(H,L));
+        A = adcR8(A,data);
+                break;
+    }
+    case 0x8F:
+        A = adcR8(A,A);
+        break;
+    case 0x90:
+        A = subR8(A,B);
+        break;
+    case 0x91:
+        A = subR8(A,C);
+        break;
+    case 0x92:
+        A = subR8(A,D);
+        break;
+    case 0x93:
+        A = subR8(A,E);
+        break;
+    case 0x94:
+        A = subR8(A,H);
+        break;
+    case 0x95:  
+        A = subR8(A,L);
+        break;
+    case 0x96:
+    {
+        uint8_t data = memory.read(setTo16(H,L));
+        A = subR8(A,data);
+        break;
+    }
+    case 0x97:
+        A = subR8(A,A);
+        break;
+    case 0x98:
+        A = sbcR8(A,B);
+        break;
+    case 0x99:
+        A = sbcR8(A,C);
+        break;
+    case 0x9A:
+        A = sbcR8(A,D);
+        break;
+    case 0x9B:
+        A = sbcR8(A,E);
+        break;
+    case 0x9C:
+        A = sbcR8(A,H);
+        break;
+    case 0x9D:
+        A = sbcR8(A,L);
+        break;
+    case 0x9E:
+    {
+        uint8_t data = memory.read(setTo16(H,L));
+        A = sbcR8(A,data);
+        break;
+    }
+    case 0x9F:
+        A = sbcR8(A,A);
+        break;
+    case 0xA0:
+        A = andR8(A,B);
+        break;
+    case 0xA1:
+        A = andR8(A,C);
+        break;
+    case 0xA2:
+        A = andR8(A,D);
+        break;
+    case 0xA3:
+        A = andR8(A,E);
+        break;
+    case 0xA4:
+        A = andR8(A,H);
+        break;
+    case 0xA5:
+        A = andR8(A,L);
+        break;
+    case 0xA6:
+    {
+        uint8_t data = memory.read(setTo16(H,L));
+        A = andR8(A,data);
+        break;
+    }
+    case 0xA7:
+        A = andR8(A,A);
+        break;
+    case 0xA8:
+        A = xorR8(A,B);
+        break;
+    case 0xA9:
+        A = xorR8(A,C);
+        break;
+    case 0xAA:
+        A = xorR8(A,D);
+        break;
+    case 0xAB:
+        A = xorR8(A,E);
+        break;
+    case 0xAC:
+        A = xorR8(A,H);
+        break;
+    case 0xAD:
+        A = xorR8(A,L);
+        break;
+    case 0xAE:
+    {
+        uint8_t data = memory.read(setTo16(H,L));
+        A = xorR8(A,data);
+        break;
+    }
+    case 0xAF:
+        A = xorR8(A,A);
+        break;
+    case 0xB0:
+        A = orR8(A,B);
+        break;
+    case 0xB1:
+        A = orR8(A,C);
+        break;
+    case 0xB2:
+        A = orR8(A,D);
+        break;
+    case 0xB3:
+        A = orR8(A,E);
+        break;
+    case 0xB4:
+        A = orR8(A,H);
+        break;
+    case 0xB5:
+        A = orR8(A,L);
+        break;
+    case 0xB6:
+    {
+        uint8_t data = memory.read(setTo16(H,L));
+        A = orR8(A,data);
+        break;
+    }
+    case 0xB7:
+        A = orR8(A,A);
+        break;
+    case 0xB8:
+        subR8(A,B); //Compare -> basically a SUB operation to set the flags but doesnt save results
+        break;
+    case 0xB9:
+        subR8(A,C);
+        break;
+    case 0xBA:
+        subR8(A,D);
+        break;
+    case 0xBB:
+        subR8(A,E);
+        break;
+    case 0xBC:
+        subR8(A,H);
+        break;
+    case 0xBD:
+        subR8(A,L);
+        break;
+    case 0xBE:
+    {
+        uint8_t data = memory.read(setTo16(H,L));
+        subR8(A,data);
+        break;
+    }
+    case 0xBF:
+        subR8(A,A);
+        break;
+        
+
+
+        
+        
 
     default:
         break;
@@ -561,19 +933,136 @@ reg8 Cpu::decrementR8(reg8 reg){
     return reg--;
 }
 
-reg16 Cpu::addR16(reg16 A, reg16 B){
-    uint32_t result = A + B;
+reg16 Cpu::addR16(reg16 regA, reg16 regB){
+    uint32_t result = regA + regB;
 
         setN(0);
-        if(((A & 0xFFF) + (B & 0xFFF)) > 0xFFF){
+        if(((regA & 0xFFF) + (regB & 0xFFF)) > 0xFFF){
             setH(1);
         }
         if(result > 0xFFFF){
             setC(1);
         }
 
-        return A + B;
+        return regA + regB;
 }
+
+reg8 Cpu::addR8(reg8 regA, reg8 regB){
+
+    setN(0);
+
+    if(regA + regB == 0){
+        setZ(1);
+    }
+
+    if(((regA & 0xF) + (regB & 0xF)) > 0xF){
+        setH(1);
+    } 
+
+    if(regA + regB > 0xFF){
+        setC(1);
+    }
+
+    return regA + regB;
+
+}
+
+reg8 Cpu::adcR8(reg8 regA, reg8 regB){
+
+    setN(0);
+
+    if(regA + regB + getC() == 0){
+        setZ(1);
+    }
+
+    if(((regA & 0xF) + (regB & 0xF)) + getC() > 0xF){
+        setH(1);
+    } 
+
+    if(regA + regB + getC() > 0xFF){
+        setC(1);
+    }
+
+    return regA + regB + getC();
+
+}
+
+reg8 Cpu::subR8(reg8 regA, reg8 regB){
+
+    setN(1);
+
+    if(regA - regB== 0){
+        setZ(1);
+    }
+
+    if((regB & 0xF) > (regA & 0xF)){
+        setH(1);
+    } 
+
+    if(regB > regA){
+        setC(1);
+    }
+
+    return regA - regB;
+}
+
+reg8 Cpu::sbcR8(reg8 regA, reg8 regB){
+
+    setN(1);
+
+    if(regA - regB - getC()== 0){
+        setZ(1);
+    }
+
+    if(((regB & 0xF) + getC()) > (regA & 0xF)){
+        setH(1);
+    } 
+
+    if((regB + getC()) > regA){
+        setC(1);
+    }
+
+    return regA - regB - getC();
+}
+
+reg8 Cpu::andR8(reg8 regA, reg8 regB){
+    setN(0);
+    setH(1);
+    setC(0);
+
+    if((regA & regB) == 0){
+        setZ(1);
+    }
+
+    return (regA & regB);
+}
+
+reg8 Cpu::xorR8(reg8 regA, reg8 regB){
+    setN(0);
+    setH(0);
+    setC(0);
+
+    if((regA ^ regB) == 0){
+        setZ(1);
+    }
+
+    return (regA ^ regB);
+}
+
+reg8 Cpu::orR8(reg8 regA, reg8 regB){
+    setN(0);
+    setH(0);
+    setC(0);
+
+    if((regA | regB) == 0){
+        setZ(1);
+    }
+
+    return (regA | regB);
+}
+
+
+
 
 void Cpu::tick(){
 
