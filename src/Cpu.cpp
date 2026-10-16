@@ -592,8 +592,6 @@ void Cpu::execute(){
         //TODO
         //TODO
         //TODO
-        //TODO
-        //TODO
         break;
     case 0x77:
         memory.write(setTo16(H,L), A);
@@ -838,11 +836,407 @@ void Cpu::execute(){
     case 0xBF:
         subR8(A,A);
         break;
-        
+    case 0xC0:
+    {
+        tick();
+        if(!getZ()){
+            PC = popR16();
+            tick();
+        }
+        break;
+    }
+    case 0xC1:
+    {
+        reg16 BC = popR16();
+        B = getFirstByte(BC);
+        C = getSecondByte(BC);
+        break;
+    }
+    case 0xC2:
+    {
+        uint8_t lo = fetch();
+        uint8_t hi = fetch();
+        uint16_t adress = setTo16(hi,lo);
+        if(!getZ()){
+            PC = adress;
+            tick();
+        }
+        break;
+    }
+    case 0xC3:
+    {
+        uint8_t lo = fetch();
+        uint8_t hi = fetch();
+        uint16_t adress = setTo16(hi,lo);
+        PC = adress;
+        tick();
+        break;
+    }
+    case 0xC4:
+    {
+        uint8_t lo = fetch();      
+        uint8_t hi = fetch();
+        uint16_t adress = setTo16(hi,lo);
+        if (!getZ())
+        {
+            uint8_t hiPC = getFirstByte(PC);
+            uint8_t loPC = getSecondByte(PC);
+            pushR16(hiPC,loPC);   
+            PC = adress;
+            tick();
+        }
+        break;
+    }
+    case 0xC5:
+        pushR16(B,C);
+        tick();
+        break;
+    case 0xC6:
+    {
+        uint8_t data = fetch();
+        A = addR8(A,data);
+        break;
+    }
+    case 0xC7:
+    {
+        rst(0x00);
+        break;
+    }
+    case 0xC8:
+    {
+        tick();
+        if(getZ()){
 
+            PC = popR16();
+            tick();
+        }
+        break;
+    }
+    case 0xC9:
+    {
+        uint8_t lo = memory.read(SP);
+        SP++;
+        uint8_t hi = memory.read(SP);
+        SP++;
 
+        PC = setTo16(hi,lo);
+        tick();
+        break;
+    }
+    case 0xCA:
+    {
+        uint8_t lo = fetch();
+        uint8_t hi = fetch();
+        uint16_t adress = setTo16(hi,lo);
+        if(getZ()){
+            PC = adress;
+            tick();
+        }
+        break;
+    }
+    case 0xCC:  
+    {
+        uint8_t lo = fetch();      
+        uint8_t hi = fetch();
+        uint16_t adress = setTo16(hi,lo);
+        if (getZ())
+        {
+            uint8_t hiPC = getFirstByte(PC);
+            uint8_t loPC = getSecondByte(PC);
+            pushR16(hiPC,loPC);   
+            PC = adress;
+            tick();
+        }
+        break;
+    }
+    case 0xCD:
+    {
+        uint8_t lo = fetch();
+        uint8_t hi = fetch();
+        uint16_t adress = setTo16(hi,lo);
+        uint8_t hiPC = getFirstByte(PC);
+        uint8_t loPC = getSecondByte(PC);
+        pushR16(hiPC,loPC);   
+        PC = adress;
+        tick();
+        break;
+    }
+    case 0xCE:
+    {
+        uint8_t data = fetch();
+        A = addR8(A,data);
+        break;
+    }
+    case 0xCF:  
+        rst(0x08);
+        break;
+    case 0xD0:
+        tick();
+        if(!getC()){
+            PC = popR16(); 
+        }
+        break;
+    case 0xD1:
+    {
+        reg16 DE = popR16();
+        D = getFirstByte(DE);
+        E = getSecondByte(DE);
+        break;
+    }
+    case 0xD2:
+    {
+        uint8_t lo = fetch();
+        uint8_t hi = fetch();
+        uint16_t adress = setTo16(hi,lo);
+        if(!getC()){
+            PC = adress;
+            tick();
+        }
+        break;
+    }
+    case 0xD4:
+    {
+        uint8_t lo = fetch();      
+        uint8_t hi = fetch();
+        uint16_t adress = setTo16(hi,lo);
+        if (!getC())
+        {
+            uint8_t hiPC = getFirstByte(PC);
+            uint8_t loPC = getSecondByte(PC);
+            pushR16(hiPC,loPC);   
+            PC = adress;
+            tick();
+        }
+        break;
+    }
+    case 0xD5:
+        pushR16(D,E);
+        tick();
+        break;
+    case 0xD6:
+    {
+        uint8_t data = fetch();
+        A = subR8(A,data);
+        break;
+    }
+    case 0xD7:
+        rst(0x10);
+        break;
+    case 0xD8:
+        tick();
+        if(getC()){
+
+            PC = popR16();
+            tick();
+        }
+        break;
+    case 0xD9:
+        //TODO
+        //TODO
+        //TODO
+        //TODO
+        //TODO
+        //TODO
+        //TODO
+        //TODO
+        break;
+    case 0xDA:
+    {
+        uint8_t lo = fetch();
+        uint8_t hi = fetch();
+        uint16_t adress = setTo16(hi,lo);
+        if(getC()){
+            PC = adress;
+            tick();
+        }
+        break;
+    }
+    case 0xDC:
+    {
+        uint8_t lo = fetch();
+        uint8_t hi = fetch();
+        uint16_t adress = setTo16(hi,lo);
+        if(getC()){
+            uint8_t hiPC = getFirstByte(PC);
+            uint8_t loPC = getSecondByte(PC);
+            pushR16(hiPC,loPC);   
+            PC = adress;
+            tick();
+        }
+        break;
+    }
+    case 0xDE:
+    {
+        uint8_t data = fetch();
+        A = sbcR8(A,data);
+        break;
+    }
+    case 0xDF:
+        rst(0x18);
+        break;
+    case 0xE0:
+    {
+        uint8_t lo = fetch();
+        uint16_t adress = setTo16(0xFF, lo);
+        memory.write(adress,A);
+        break;
+    }
+    case 0xE1:
+    {
+        reg16 HL = popR16();
+        H = getFirstByte(HL);
+        L = getSecondByte(HL);
+        break;
+    }
+    case 0xE2:
+    {
+        uint16_t adress = setTo16(0xFF,C);
+        memory.write(adress,A);
+        break;
+    }
+    case 0xE5:  
+        pushR16(H,L);
+        tick();
+        break;
+    case 0xE6:
+    {
+        uint8_t data = fetch();
+        A = andR8(A,data);
+        break;
+    }
+    case 0xE7:
+        rst(0x20);
+        break;
+    case 0xE8:
+    {
+        int8_t e = fetch();
+        setZ(0);
+        setN(0);
+
+        if(((SP & 0xF) + (e & 0xF)) > 0xF){
+            setH(1);
+        }
+
+        if(((SP & 0xFF) + e) > 0xFF){
+            setC(1);
+        }
+
+        SP += e;
+        tick();
+        tick();
+        break;
+
+    }
+    case 0xE9:
+        PC = setTo16(H,L);
+        break;
+    case 0xEA:
+    {
+        uint8_t lo = fetch();
+        uint8_t hi = fetch();
+        uint16_t adress = setTo16(hi,lo);
+        memory.write(adress,A);
+        break;
+    }
+    case 0xEE:
+    {
+        uint8_t data = fetch();
+        A = xorR8(A,data);
+        break;
+    }
+    case 0xEF:
+        rst(0x28);
+        break;
+    case 0xF0:
+    {
+        uint8_t lo = fetch();
+        uint16_t adress = setTo16(0xFF,lo);
+        A = memory.read(adress);
+        break;
+    }
+    case 0xF1:
+    {
+        reg16 AF = popR16();
+        A = getFirstByte(AF);
+        F = getSecondByte(AF);
+        break;
+    }
+    case 0xF2:
+    {
+        uint16_t adress = setTo16(0xFF,C);
+        A = memory.read(adress);
+        break;
+    }
+    case 0xF3:
+        //TODO
+        //TODO
+        //TODO
+        //TODO
+        //TODO
+        //TODO
+        break;
+    case 0xF5:  
+    {
+        pushR16(A,F);
+        tick();
+        break;
+    }
+    case 0xF6:
+    {
+        uint8_t data = fetch();
+        A = orR8(A,data);
+        break;
+    }
+    case 0xF7:
+        rst(0x30);
+        break;
+    case 0xF8:
+    {
+        int8_t e = fetch();
+        setZ(0);
+        setN(0);
+
+        if(((SP & 0xF) + (e & 0xF)) > 0xF){
+            setH(1);
+        }
+
+        if(((SP & 0xFF) + e) > 0xFF){
+            setC(1);
+        }
+
+        SP += e;
+        tick();
         
-        
+        H = getFirstByte(SP);
+        L = getSecondByte(SP);
+        break;
+    }
+    case 0xF9:
+        SP = setTo16(H,L);
+        break;
+    case 0xFA:
+    {
+        uint8_t lo = fetch();
+        uint8_t hi= fetch();
+        uint16_t adress = setTo16(hi,lo);
+        A = memory.read(adress);
+        break;
+    }
+    case 0xFB:
+        //TODO
+        //TODO
+        //TODO
+        //TODO
+        //TODO
+    case 0xFE:
+    {
+        uint8_t data = fetch();
+        subR8(A,data);
+        break;
+    }
+    case 0xFF:
+        rst(0x38);
+        break;
 
     default:
         break;
@@ -1061,6 +1455,30 @@ reg8 Cpu::orR8(reg8 regA, reg8 regB){
     return (regA | regB);
 }
 
+reg16 Cpu::popR16(){
+    uint8_t lo = memory.read(SP);
+    SP++;
+    uint8_t hi = memory.read(SP);
+    SP++;
+
+    return setTo16(hi,lo);
+}
+
+void Cpu::pushR16(reg8 hi, reg8 lo){
+    SP--;
+    memory.write(SP,hi);
+    SP--;
+    memory.write(SP,lo);
+}
+
+void Cpu::rst(uint16_t vector){
+
+    uint8_t hiPC = getFirstByte(PC);
+    uint8_t loPC = getSecondByte(PC);
+    pushR16(hiPC,loPC);   
+    PC = vector;
+    tick();
+}
 
 
 

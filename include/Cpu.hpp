@@ -9,7 +9,7 @@ class Cpu{
 
 private:
     reg8 A = 0x01;
-    reg8 F = 0000;
+    reg8 F = 0b0000;
     reg8 B = 0xFF;
     reg8 C = 0x13;
     reg8 D = 0x00;
@@ -18,6 +18,7 @@ private:
     reg8 L = 0x03;
     reg16 PC = 0x100;
     reg16 SP = 0xFFFE;
+    uint8_t IME = 0;
     Memory &memory;
 
 
@@ -47,5 +48,8 @@ private:
     reg8 andR8(reg8 regA, reg8 regB);
     reg8 xorR8(reg8 regA, reg8 regB);
     reg8 orR8(reg8 regA, reg8 regB);
-    
+    reg16 popR16();
+    void pushR16(reg8 hi, reg8 lo);
+    void rst(uint16_t vec);
+
 };
