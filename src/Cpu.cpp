@@ -592,6 +592,9 @@ void Cpu::execute(){
         //TODO
         //TODO
         //TODO
+        //TODO
+        //TODO
+        //TODO 
         break;
     case 0x77:
         memory.write(setTo16(H,L), A);
@@ -914,12 +917,7 @@ void Cpu::execute(){
     }
     case 0xC9:
     {
-        uint8_t lo = memory.read(SP);
-        SP++;
-        uint8_t hi = memory.read(SP);
-        SP++;
-
-        PC = setTo16(hi,lo);
+        PC = popR16();
         tick();
         break;
     }
@@ -1031,15 +1029,12 @@ void Cpu::execute(){
         }
         break;
     case 0xD9:
-        //TODO
-        //TODO
-        //TODO
-        //TODO
-        //TODO
-        //TODO
-        //TODO
-        //TODO
+    {
+        ime_flag = 1;
+        PC = popR16();
+        tick();
         break;
+    }       
     case 0xDA:
     {
         uint8_t lo = fetch();
@@ -1168,12 +1163,7 @@ void Cpu::execute(){
         break;
     }
     case 0xF3:
-        //TODO
-        //TODO
-        //TODO
-        //TODO
-        //TODO
-        //TODO
+        ime_flag = 0;
         break;
     case 0xF5:  
     {
@@ -1223,11 +1213,8 @@ void Cpu::execute(){
         break;
     }
     case 0xFB:
-        //TODO
-        //TODO
-        //TODO
-        //TODO
-        //TODO
+        ime_flag = 1;
+        break;
     case 0xFE:
     {
         uint8_t data = fetch();
@@ -1237,7 +1224,186 @@ void Cpu::execute(){
     case 0xFF:
         rst(0x38);
         break;
+    case 0xCB:
+    {
+        opcode = fetch();
+        switch(opcode){
+            case 0x00:
+                B = rlcR8(B);
+                break;
+            case 0x01:
+                C = rlcR8(C);
+                break;          
+            case 0x02:
+                D = rlcR8(D);
+                break;
+            case 0x03:
+                E = rlcR8(E);
+                break;
+            case 0x04:
+                H = rlcR8(H);
+                break;
+            case 0x05:
+                L = rlcR8(L);
+                break;
+            case 0x06:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                data = rlcR8(data);
+                memory.write(setTo16(H,L),data);
+                break;
+            }
+            case 0x07:
+                A = rlcR8(A);
+                break;
+            case 0x08:
+                B = rrcR8(B);
+                break;
+            case 0x09:
+                C = rrcR8(C);
+                break;
+            case 0x0A:
+                D = rrcR8(D);
+                break;
+            case 0x0B:
+                E = rrcR8(E);
+                break;
+            case 0x0C:
+                H = rrcR8(H);
+                break;
+            case 0x0D:
+                L = rrcR8(L);
+                break;
+            case 0x0E:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                data = rrcR8(data);
+                memory.write(setTo16(H,L), data);
+                break;
+            }
+            case 0x0F:
+                A = rrcR8(A);
+                break;
+            case 0x10:
+                B = rlR8(B);
+                break;
+            case 0x11:
+                C = rlR8(C);
+                break;
+            case 0x12:
+                D = rlR8(D);
+                break;
+            case 0x13:
+                E = rlR8(E);
+                break;
+            case 0x14:
+                H = rlR8(H);
+                break;
+            case 0x15:
+                L = rlR8(L);
+                break;
+            case 0x16:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                data = rlR8(data);
+                memory.write(setTo16(H,L), data);
+                break;
+            }
+            case 0x17:
+                A = rlR8(A);
+                break;
+            case 0x18:
+                B = rrR8(B);
+                break;
+            case 0x19:
+                C = rrR8(C);
+                break;
+            case 0x1A:
+                D = rrR8(D);
+                break;
+            case 0x1B:  
+                E = rrR8(E);
+                break;
+            case 0x1C:
+                H = rrR8(H);
+                break;
+            case 0x1D:
+                L = rrR8(L);
+                break;
+            case 0x1E:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                data = rrR8(data);
+                memory.write(setTo16(H,L),data);
+                break;
+            }
+            case 0x1F:
+                A = rrR8(A);
+                break;
+            case 0x20:
+                B = slaR8(B);
+                break;
+            case 0x21:
+                C = slaR8(C);
+                break;
+            case 0x22:
+                D = slaR8(D);
+                break;
+            case 0x23:
+                E = slaR8(E);
+                break;
+            case 0x24:  
+                H = slaR8(H);
+                break;
+            case 0x25:
+                L = slaR8(L);
+                break;
+            case 0x26:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                data = slaR8(data);
+                memory.write(setTo16(H,L),data);
+                break;
+            }
+            case 0x27:  
+                A = slaR8(A);
+                break;
+            case 0x28:
+                B = sraR8(B);
+                break;
+            case 0x29:
+                C = sraR8(C);
+                break;
+            case 0x2A:
+                D = sraR8(D);
+                break;
+            case 0x2B:
+                E = sraR8(E);
+                break;
+            case 0x2C:
+                H = sraR8(H);
+                break;
+            case 0x2D:
+                L = sraR8(L);
+                break;
+            case 0x2E:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                data = sraR8(data);
+                memory.write(setTo16(H,L),data);
+                break;
+            }
+            case 0x2F:
+                A= sraR8(A);
+                break;
 
+
+        }
+
+
+
+
+    }
     default:
         break;
     }
@@ -1480,7 +1646,89 @@ void Cpu::rst(uint16_t vector){
     tick();
 }
 
+reg8 Cpu::rlcR8(reg8 reg){
+ 
+    uint8_t bit = reg >> 7;
+    setC(bit);
+    setN(0);
+    setH(0);
 
+    reg = (reg << 1) | bit;
+    if(reg == 0){
+        setZ(1);
+    }
+
+    return reg;
+}
+
+reg8 Cpu::rrcR8(reg8 reg){
+    uint8_t bit = (reg & 1);
+    setC(bit);
+    setN(0);
+    setH(0);
+    reg = (reg >> 1) | (bit << 7);
+    if(reg == 0){
+        setZ(1);
+    }
+    return reg;
+}
+
+reg8 Cpu::rlR8(reg8 reg){
+    uint8_t bit = (reg >> 7);
+    setN(0);
+    setH(0);
+    uint8_t new_bit = getC();
+    reg = (reg << 1) | new_bit;
+    if(reg == 0){
+        setZ(1);
+    }
+    
+    setC(bit);
+
+    return reg;
+}
+
+reg8 Cpu::rrR8(reg8 reg)
+{
+    uint8_t bit = reg & 1;
+    setN(0);
+    setH(0);
+    uint8_t new_bit = getC();
+    reg = (reg >> 1) | (new_bit << 7);
+    if(reg == 0){
+        setZ(1);
+    }
+    setC(bit);
+
+    return reg;
+}
+
+reg8 Cpu::slaR8(reg8 reg)
+{
+    setN(0);
+    setH(0);
+    uint8_t bit = reg >> 7;
+    setC(bit);
+    reg = reg << 1;
+    if(reg == 0){
+        setZ(1);
+    }
+    return reg;
+}
+
+reg8 Cpu::sraR8(reg8 reg)
+{
+    setN(0);
+    setH(0);
+    uint8_t bit = reg & 1;
+    setC(bit);
+    bit = reg >> 7;
+    reg = (reg >> 1) | (bit << 7);
+    if(reg == 0){
+        setZ(1);
+    }
+    return reg;
+}
 
 void Cpu::tick(){
 

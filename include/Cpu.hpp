@@ -18,7 +18,7 @@ private:
     reg8 L = 0x03;
     reg16 PC = 0x100;
     reg16 SP = 0xFFFE;
-    uint8_t IME = 0;
+    uint8_t ime_flag = 0;
     Memory &memory;
 
 
@@ -51,5 +51,11 @@ private:
     reg16 popR16();
     void pushR16(reg8 hi, reg8 lo);
     void rst(uint16_t vec);
+    reg8 rlcR8(reg8 reg);
+    reg8 rrcR8(reg8 reg);
+    reg8 rlR8(reg8 reg);
+    reg8 rrR8(reg8 reg);
+    reg8 slaR8(reg8 reg);
+    reg8 sraR8(reg8 reg);
 
 };

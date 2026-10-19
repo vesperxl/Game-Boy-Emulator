@@ -13,5 +13,7 @@ private:
 public:
     uint8_t read(uint16_t adress);
     void write(uint16_t adress, uint8_t data);
+    uint8_t IF();
+    uint8_t IE();
 
 };
