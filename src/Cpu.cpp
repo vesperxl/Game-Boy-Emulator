@@ -1396,9 +1396,496 @@ void Cpu::execute(){
             case 0x2F:
                 A= sraR8(A);
                 break;
-
-
+            case 0x30:
+                B = swapR8(B);
+                break;
+            case 0x31:
+                C = swapR8(C);
+                break;
+            case 0x32:
+                D = swapR8(D);
+                break;
+            case 0x33:
+                E = swapR8(E);
+                break;
+            case 0x34:
+                H = swapR8(H);
+                break;
+            case 0x35:
+                L = swapR8(L);
+                break;
+            case 0x36:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                data = swapR8(data);
+                memory.write(setTo16(H,L),data);
+                break;
+            }
+            case 0x37:
+                A = swapR8(A);
+                break;
+            case 0x38:
+                B = slrR8(B);
+                break;
+            case 0x39:
+                C = slrR8(C);
+                break;
+            case 0x3A:
+                D = slrR8(D);
+                break;
+            case 0x3B:
+                E = slrR8(E);
+                break;
+            case 0x3C:
+                H = slrR8(L);
+                break;
+            case 0xED:
+                L = slrR8(L);
+                break;
+            case 0x3E:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                data = slrR8(data);
+                memory.write(setTo16(H,L),data);
+                break;
+            }
+            case 0x3F:
+                A = slrR8(A);
+                break;
+            case 0x40:
+                bitU3(0,B);
+                break;
+            case 0x41:
+                bitU3(0,C);
+                break;
+            case 0x42:
+                bitU3(0,D);
+                break;
+            case 0x43:
+                bitU3(0,E);
+                break;
+            case 0x44:
+                bitU3(0,H);
+                break;
+            case 0x45:
+                bitU3(0,L);
+                break;
+            case 0x46:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                bitU3(0,data);
+                break;
+            }
+            case 0x47:
+                bitU3(0,A);
+                break;
+            case 0x48:
+                bitU3(1,B);
+                break;
+            case 0x49:
+                bitU3(1,C);
+                break;
+            case 0x4A:
+                bitU3(1,D);
+                break;
+            case 0x4B:
+                bitU3(1,E);
+                break;
+            case 0x4C:
+                bitU3(1,H);
+                break;
+            case 0x4D:
+                bitU3(1,L);
+                break;
+            case 0x4E:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                bitU3(1,data);
+                break;
+            }
+            case 0x4F:
+                bitU3(1,A);
+                break;
+            case 0x50:
+                bitU3(2,B);
+                break;
+            case 0x51:
+                bitU3(2,C);
+                break;
+            case 0x52:
+                bitU3(2,D);
+                break;
+            case 0x53:
+                bitU3(2,E);
+                break;
+            case 0x54:
+                bitU3(2,H);
+                break;
+            case 0x55:
+                bitU3(2,L);
+                break;
+            case 0x56:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                bitU3(2,data);
+                break;
+            }
+            case 0x57:
+                bitU3(2,A);
+                break;
+            case 0x58:
+                bitU3(3,B);
+                break;
+            case 0x59:
+                bitU3(3,C);
+                break;
+            case 0x5A:
+                bitU3(3,D);
+                break;
+            case 0x5B:
+                bitU3(3,E);
+                break;
+            case 0x5C:
+                bitU3(3,H);
+                break;
+            case 0x5D:
+                bitU3(3,L);
+                break;
+            case 0x5E:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                bitU3(3,data);
+                break;
+            }
+            case 0x5F:
+                bitU3(3,A);
+                break;
+            case 0x60:
+                bitU3(4,B);
+                break;
+            case 0x61:
+                bitU3(4,C);
+                break;
+            case 0x62:
+                bitU3(4,D);
+                break;
+            case 0x63:
+                bitU3(4,E);
+                break;
+            case 0x64:
+                bitU3(4,H);
+                break;
+            case 0x65:
+                bitU3(4,L);
+                break;
+            case 0x66:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                bitU3(4,data);
+                break;
+            }
+            case 0x67:
+                bitU3(4,A);
+                break;
+            case 0x68:
+                bitU3(5,B);
+                break;
+            case 0x69:
+                bitU3(5,C);
+                break;
+            case 0x6A:
+                bitU3(5,D);
+                break;
+            case 0x6B:
+                bitU3(5,E);
+                break;
+            case 0x6C:
+                bitU3(5,H);
+                break;
+            case 0x6D:
+                bitU3(5,L);
+                break;
+            case 0x6E:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                bitU3(5,data);
+                break;
+            }
+            case 0x6F:
+                bitU3(5,A);
+                break;
+            case 0x70:
+                bitU3(6,B);
+                break;
+            case 0x71:
+                bitU3(6,C);
+                break;
+            case 0x72:
+                bitU3(6,D);
+                break;
+            case 0x73:
+                bitU3(6,E);
+                break;
+            case 0x74:
+                bitU3(6,H);
+                break;
+            case 0x75:
+                bitU3(6,L);
+                break;
+            case 0x76:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                bitU3(6,data);
+                break;
+            }
+            case 0x77:
+                bitU3(6,A);
+                break;
+            case 0x78:
+                bitU3(7,B);
+                break;
+            case 0x79:
+                bitU3(7,C);
+                break;
+            case 0x7A:
+                bitU3(7,D);
+                break;
+            case 0x7B:
+                bitU3(7,E);
+                break;
+            case 0x7C:
+                bitU3(7,H);
+                break;
+            case 0x7D:
+                bitU3(7,L);
+                break;
+            case 0x7E:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                bitU3(7,data);
+                break;
+            }
+            case 0x7F:
+                bitU3(7,A);
+                break;
+            case 0x80:
+                resU3(0,B);
+                break;
+            case 0x81:
+                resU3(0,C);
+                break;
+            case 0x82:
+                resU3(0,D);
+                break;
+            case 0x83:
+                resU3(0,E);
+                break;
+            case 0x84:
+                resU3(0,H);
+                break;
+            case 0x85:
+                resU3(0,L);
+                break;
+            case 0x86:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                resU3(0,data);
+                break;
+            }
+            case 0x87:
+                resU3(0,A);
+                break;
+            case 0x88:
+                resU3(1,B);
+                break;
+            case 0x89:
+                resU3(1,C);
+                break;
+            case 0x8A:
+                resU3(1,D);
+                break;
+            case 0x8B:
+                resU3(1,E);
+                break;
+            case 0x8C:
+                resU3(1,H);
+                break;
+            case 0x8D:
+                resU3(1,L);
+                break;
+            case 0x8E:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                resU3(1,data);
+                break;
+            }
+            case 0x8F:
+                resU3(1,A);
+                break;
+            case 0x90:
+                resU3(2,B);
+                break;
+            case 0x91:
+                resU3(2,C);
+                break;
+            case 0x92:
+                resU3(2,D);
+                break;
+            case 0x93:
+                resU3(2,E);
+                break;
+            case 0x94:
+                resU3(2,H);
+                break;
+            case 0x95:
+                resU3(2,L);
+                break;
+            case 0x96:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                resU3(2,data);
+                break;
+            }
+            case 0x97:
+                resU3(2,A);
+                break;
+            case 0x98:
+                resU3(3,B);
+                break;
+            case 0x99:
+                resU3(3,C);
+                break;
+            case 0x9A:
+                resU3(3,D);
+                break;
+            case 0x9B:
+                resU3(3,E);
+                break;
+            case 0x9C:
+                resU3(3,H);
+                break;
+            case 0x9D:
+                resU3(3,L);
+                break;
+            case 0x9E:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                resU3(3,data);
+                break;
+            }
+            case 0x9F:
+                resU3(3,A);
+                break;
+            case 0xA0:
+                resU3(4,B);
+                break;
+            case 0xA1:
+                resU3(4,C);
+                break;
+            case 0xA2:
+                resU3(4,D);
+                break;
+            case 0xA3:
+                resU3(4,E);
+                break;
+            case 0xA4:
+                resU3(4,H);
+                break;
+            case 0xA5:
+                resU3(4,L);
+                break;
+            case 0xA6:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                resU3(4,data);
+                break;
+            }
+            case 0xA7:
+                resU3(4,A);
+                break;
+            case 0xA8:
+                resU3(5,B);
+                break;
+            case 0xA9:
+                resU3(5,C);
+                break;
+            case 0xAA:
+                resU3(5,D);
+                break;
+            case 0xAB:
+                resU3(5,E);
+                break;
+            case 0xAC:
+                resU3(5,H);
+                break;
+            case 0xAD:
+                resU3(5,L);
+                break;
+            case 0xAE:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                resU3(5,data);
+                break;
+            }
+            case 0xAF:
+                resU3(5,A);
+                break;
+            case 0xB0:
+                resU3(6,B);
+                break;
+            case 0xB1:
+                resU3(6,C);
+                break;
+            case 0xB2:
+                resU3(6,D);
+                break;
+            case 0xB3:
+                resU3(6,E);
+                break;
+            case 0xB4:
+                resU3(6,H);
+                break;
+            case 0xB5:
+                resU3(6,L);
+                break;
+            case 0xB6:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                resU3(6,data);
+                break;
+            }
+            case 0xB7:
+                resU3(6,A);
+                break;
+            case 0xB8:
+                resU3(7,B);
+                break;
+            case 0xB9:
+                resU3(7,C);
+                break;
+            case 0xBA:
+                resU3(7,D);
+                break;
+            case 0xBB:
+                resU3(7,E);
+                break;
+            case 0xBC:
+                resU3(7,H);
+                break;
+            case 0xBD:
+                resU3(7,L);
+                break;
+            case 0xBE:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                resU3(7,data);
+                break;
+            }
+            case 0xBF:
+                resU3(7,A);
+                break;
         }
+        
 
 
 
@@ -1723,13 +2210,55 @@ reg8 Cpu::sraR8(reg8 reg)
     uint8_t bit = reg & 1;
     setC(bit);
     bit = reg >> 7;
-    reg = (reg >> 1) | (bit << 7);
+    reg = (bit << 7) | (reg >> 1);
     if(reg == 0){
         setZ(1);
     }
     return reg;
 }
 
+reg8 Cpu::swapR8(reg8 reg){
+    setN(0);
+    setH(0);
+    setC(0);
+    
+    uint8_t upper = (reg >> 4);
+    uint8_t lower = (reg & 0xF);
+    reg = (lower << 4) | upper;
+
+    if(reg == 0){
+        setZ(0);
+    }
+    return reg;
+}
+
+reg8 Cpu::slrR8(reg8 reg){
+    setN(0);
+    setH(0);
+    uint8_t bit = reg & 1;
+    setC(bit);
+
+    reg = reg >> 1;
+    if(reg == 0){
+        setZ(1);
+    }
+
+    return reg;
+}
+
+void Cpu::bitU3(uint8_t bit, reg8 reg){
+    setN(0);
+    setH(1);
+
+    if(((reg >> bit) & 1) == 0){
+        setZ(1);
+    }
+}
+
+reg8 Cpu::resU3(uint8_t bit, reg8 reg){
+    reg = (reg & ~(1<<bit));
+    return reg; 
+}
 void Cpu::tick(){
 
 }

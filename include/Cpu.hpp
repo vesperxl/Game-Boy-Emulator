@@ -57,5 +57,9 @@ private:
     reg8 rrR8(reg8 reg);
     reg8 slaR8(reg8 reg);
     reg8 sraR8(reg8 reg);
+    reg8 swapR8(reg8 reg);
+    reg8 slrR8(reg8 reg);
+    void bitU3(uint8_t bit, reg8 reg);
+    reg8 resU3(uint8_t bit, reg8 reg);
 
 };
