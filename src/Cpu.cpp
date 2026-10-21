@@ -1439,7 +1439,7 @@ void Cpu::execute(){
             case 0x3C:
                 H = slrR8(L);
                 break;
-            case 0xED:
+            case 0x3D:
                 L = slrR8(L);
                 break;
             case 0x3E:
@@ -1884,6 +1884,222 @@ void Cpu::execute(){
             case 0xBF:
                 resU3(7,A);
                 break;
+            case 0xC0:
+                setU3(0,B);
+                break;
+            case 0xC1:
+                setU3(0,C);
+                break;
+            case 0xC2:
+                setU3(0,D);
+                break;
+            case 0xC3:
+                setU3(0,E);
+                break;
+            case 0xC4:
+                setU3(0,H);
+                break;
+            case 0xC5:
+                setU3(0,L);
+                break;
+            case 0xC6:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                setU3(0,data);
+                break;
+            }
+            case 0xC7:
+                setU3(0,A);
+                break;
+            case 0xC8:
+                setU3(1,B);
+                break;
+            case 0xC9:
+                setU3(1,C);
+                break;
+            case 0xCA:
+                setU3(1,D);
+                break;
+            case 0xCB:
+                setU3(1,E);
+                break;
+            case 0xCC:
+                setU3(1,H);
+                break;
+            case 0xCD:
+                setU3(1,L);
+                break;
+            case 0xCE:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                setU3(1,data);
+                break;
+            }
+            case 0xCF:
+                setU3(1,A);
+                break;
+            case 0xD0:
+                setU3(2,B);
+                break;
+            case 0xD1:
+                setU3(2,C);
+                break;
+            case 0xD2:
+                setU3(2,D);
+                break;
+            case 0xD3:
+                setU3(2,E);
+                break;
+            case 0xD4:
+                setU3(2,H);
+                break;
+            case 0xD5:
+                setU3(2,L);
+                break;
+            case 0xD6:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                setU3(2,data);
+                break;
+            }
+            case 0xD7:
+                setU3(2,A);
+                break;
+            case 0xD8:
+                setU3(3,B);
+                break;
+            case 0xD9:
+                setU3(3,C);
+                break;
+            case 0xDA:
+                setU3(3,D);
+                break;
+            case 0xDB:
+                setU3(3,E);
+                break;
+            case 0xDC:
+                setU3(3,H);
+                break;
+            case 0xDD:
+                setU3(3,L);
+                break;
+            case 0xDE:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                setU3(3,data);
+                break;
+            }
+            case 0xDF:
+                setU3(3,A);
+                break;
+            case 0xE0:
+                setU3(4,B);
+                break;
+            case 0xE1:
+                setU3(4,C);
+                break;
+            case 0xE2:
+                setU3(4,D);
+                break;
+            case 0xE3:
+                setU3(4,E);
+                break;
+            case 0xE4:
+                setU3(4,H);
+                break;
+            case 0xE5:
+                setU3(4,L);
+                break;
+            case 0xE6:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                setU3(4,data);
+                break;
+            }
+            case 0xE7:
+                setU3(4,A);
+                break;
+            case 0xE8:
+                setU3(5,B);
+                break;
+            case 0xE9:
+                setU3(5,C);
+                break;
+            case 0xEA:
+                setU3(5,D);
+                break;
+            case 0xEB:
+                setU3(5,E);
+                break;
+            case 0xEC:
+                setU3(5,H);
+                break;
+            case 0xED:
+                setU3(5,L);
+                break;
+            case 0xEE:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                setU3(5,data);
+                break;
+            }
+            case 0xEF:
+                setU3(5,A);
+                break;
+            case 0xF0:
+                setU3(6,B);
+                break;
+            case 0xF1:
+                setU3(6,C);
+                break;
+            case 0xF2:
+                setU3(6,D);
+                break;
+            case 0xF3:
+                setU3(6,E);
+                break;
+            case 0xF4:
+                setU3(6,H);
+                break;
+            case 0xF5:
+                setU3(6,L);
+                break;
+            case 0xF6:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                setU3(6,data);
+                break;
+            }
+            case 0xF7:
+                setU3(6,A);
+                break;
+            case 0xF8:
+                setU3(7,B);
+                break;
+            case 0xF9:
+                setU3(7,C);
+                break;
+            case 0xFA:
+                setU3(7,D);
+                break;
+            case 0xFB:
+                setU3(7,E);
+                break;
+            case 0xFC:
+                setU3(7,H);
+                break;
+            case 0xFD:
+                setU3(7,L);
+                break;
+            case 0xFE:
+            {
+                uint8_t data = memory.read(setTo16(H,L));
+                setU3(7,data);
+                break;
+            }
+            case 0xFF:
+                setU3(7,A);
+                break;
         }
         
 
@@ -2257,6 +2473,11 @@ void Cpu::bitU3(uint8_t bit, reg8 reg){
 
 reg8 Cpu::resU3(uint8_t bit, reg8 reg){
     reg = (reg & ~(1<<bit));
+    return reg; 
+}
+
+reg8 Cpu::setU3(uint8_t bit, reg8 reg){
+    reg = (reg | (1<<bit));
     return reg; 
 }
 void Cpu::tick(){
