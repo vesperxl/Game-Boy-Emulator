@@ -19,3 +19,7 @@ uint8_t Memory::IF(){
 uint8_t Memory::IE(){
     return _memoryBank[0xFFFF];
 }
+
+void Memory::clearMemory(){
+    _memoryBank.fill(0);
+}

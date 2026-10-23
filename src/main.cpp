@@ -8,7 +8,9 @@ using json = nlohmann::json;
 int main(int argvc, char* argv[]){
 
     Test test;
-    test.runAllTests();
-    
-    return 0;
+    /* json jsonFile = test.parseFile("/Users/vesperal/Documents/Private/Game-Boy-Emulator/SingleStepTests/0C.json");
+    test.runDetailedJsonFile(jsonFile); */
+
+       test.runAllTests();
+      return 0;
 }

@@ -20,4 +20,6 @@ class Test{
         uint8_t runSingleTest(uint8_t i, const json& data);
         void runJsonFile(const json& data);
         void runAllTests();
+        void runDetailedSingleTest(const uint8_t i, const json& data);
+        void runDetailedJsonFile(const json& data);
 };

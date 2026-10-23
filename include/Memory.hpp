@@ -15,5 +15,6 @@ public:
     void write(uint16_t adress, uint8_t data);
     uint8_t IF();
     uint8_t IE();
+    void clearMemory();
 
 };

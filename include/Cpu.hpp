@@ -20,9 +20,9 @@ public:
     reg16 SP = 0xFFFE;
     uint8_t ime_flag = 0;
     uint8_t ime_next = 0;
-    Memory &_memory;
+    Memory *_memory;
 
-    Cpu(Memory &mem);
+    Cpu(Memory *mem);
     void step();
     void tick();
     uint8_t fetch();
@@ -61,5 +61,5 @@ public:
     void bitU3(uint8_t bit, reg8 reg);
     reg8 resU3(uint8_t bit, reg8 reg);
     reg8 setU3(uint8_t bit, reg8 reg);
-
+    void reset();
 };

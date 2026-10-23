@@ -1,5 +1,6 @@
 #include<cstdint>
 #include <memory>
+#include <iostream>
 
 #include "Cpu.hpp"
 #include"Memory.hpp"
@@ -20,7 +21,7 @@ void Cpu::step(){
     case 0x02:
     {
         uint16_t BC = setTo16(B,C);
-        _memory.write(BC,A);
+        _memory->write(BC,A);
         break;
     }
     case 0x03:
@@ -57,10 +58,10 @@ void Cpu::step(){
         uint8_t hi = fetch();
         uint16_t adress = setTo16(hi,lo);
         uint8_t data = getSecondByte(SP);
-        _memory.write(adress,data);
+        _memory->write(adress,data);
         data = getFirstByte(SP);
         adress++;
-        _memory.write(adress,data);
+        _memory->write(adress,data);
         break;
     }
     case 0x09:
@@ -75,7 +76,7 @@ void Cpu::step(){
         break;
     }
     case 0x0A:
-        A = _memory.read(setTo16(B,C));
+        A = _memory->read(setTo16(B,C));
         break;
     case 0x0B:
     {
@@ -115,7 +116,7 @@ void Cpu::step(){
     case 0x12:
     {
         uint16_t DE = setTo16(B,C);
-        _memory.write(DE,A);
+        _memory->write(DE,A);
         break;
     }
     case 0x13:
@@ -165,7 +166,7 @@ void Cpu::step(){
         break;
     }
     case 0x1A:
-        A = _memory.read(setTo16(D,E));
+        A = _memory->read(setTo16(D,E));
         break;
     case 0x1B:
     {
@@ -212,7 +213,7 @@ void Cpu::step(){
     case 0x22:
     {
         reg16 HL = setTo16(H,L);
-        _memory.write(HL,A);
+        _memory->write(HL,A);
         HL++;
         H = getFirstByte(HL);
         L = getSecondByte(HL);
@@ -290,7 +291,7 @@ void Cpu::step(){
     case 0x2A:
     {
         reg16 HL = setTo16(H,L);
-        A = _memory.read(HL);
+        A = _memory->read(HL);
         HL++;
         H = getFirstByte(HL);
         L = getSecondByte(HL);
@@ -341,7 +342,7 @@ void Cpu::step(){
     case 0x32:
     {
         reg16 HL = setTo16(H,L);
-        _memory.write(HL,A);
+        _memory->write(HL,A);
         HL--;
         H = getFirstByte(HL);
         L = getSecondByte(HL);
@@ -353,22 +354,22 @@ void Cpu::step(){
         break;
     case 0x34:
     {
-        uint8_t data = _memory.read(setTo16(H,L));
+        uint8_t data = _memory->read(setTo16(H,L));
         incrementR8(data);
-        _memory.write(setTo16(H,L),data);
+        _memory->write(setTo16(H,L),data);
         break;
     }
     case 0x35:
     {
-        uint8_t data = _memory.read(setTo16(H,L));
+        uint8_t data = _memory->read(setTo16(H,L));
         decrementR8(data);
-        _memory.write(setTo16(H,L),data);
+        _memory->write(setTo16(H,L),data);
         break;
     }
     case 0x36:
     {
         uint8_t data = fetch();
-        _memory.write(setTo16(H,L),data);
+        _memory->write(setTo16(H,L),data);
         break;
     }
     case 0x37:
@@ -395,7 +396,7 @@ void Cpu::step(){
     case 0x3A:
     {
         reg16 HL = setTo16(H,L);
-        A = _memory.read(HL);
+        A = _memory->read(HL);
         HL--;
         H = getFirstByte(HL);
         L = getSecondByte(HL);
@@ -442,7 +443,7 @@ void Cpu::step(){
         B = L;
         break;
     case 0x46:
-        B = _memory.read(setTo16(H,L));
+        B = _memory->read(setTo16(H,L));
         break;
     case 0x47:
         B = A;
@@ -466,7 +467,7 @@ void Cpu::step(){
         C = L;
         break;
     case 0x4E:
-        C = _memory.read(setTo16(H,L));
+        C = _memory->read(setTo16(H,L));
         break;
     case 0x4F:
         C = A;
@@ -490,7 +491,7 @@ void Cpu::step(){
         D = L;
         break;
     case 0x56:
-        D = _memory.read(setTo16(H,L));
+        D = _memory->read(setTo16(H,L));
         break;
     case 0x57:
         D = A;
@@ -514,7 +515,7 @@ void Cpu::step(){
         E = L;
         break;
     case 0x5E:
-        E = _memory.read(setTo16(H,L));
+        E = _memory->read(setTo16(H,L));
         break;
     case 0x5F:
         E = A;
@@ -538,7 +539,7 @@ void Cpu::step(){
         H = L;
         break;
     case 0x66:
-        H = _memory.read(setTo16(H,L));
+        H = _memory->read(setTo16(H,L));
         break;
     case 0x67:
         H = A;
@@ -562,28 +563,28 @@ void Cpu::step(){
         //L = L;
         break;
     case 0x6E:
-        L = _memory.read(setTo16(H,L));
+        L = _memory->read(setTo16(H,L));
         break;
     case 0x6F:
         L = A;
         break;
     case 0x70:
-        _memory.write(setTo16(H,L), B);
+        _memory->write(setTo16(H,L), B);
         break;
     case 0x71:
-        _memory.write(setTo16(H,L), C);
+        _memory->write(setTo16(H,L), C);
         break;
     case 0x72:
-        _memory.write(setTo16(H,L), D);
+        _memory->write(setTo16(H,L), D);
         break;
     case 0x73:
-        _memory.write(setTo16(H,L), E);
+        _memory->write(setTo16(H,L), E);
         break;
     case 0x74:
-        _memory.write(setTo16(H,L), H);
+        _memory->write(setTo16(H,L), H);
         break;
     case 0x75:
-        _memory.write(setTo16(H,L), L);
+        _memory->write(setTo16(H,L), L);
         break;
     case 0x76:
         //TODO
@@ -597,7 +598,7 @@ void Cpu::step(){
         //TODO 
         break;
     case 0x77:
-        _memory.write(setTo16(H,L), A);
+        _memory->write(setTo16(H,L), A);
         break;
     case 0x78:  
         A = B;
@@ -618,7 +619,7 @@ void Cpu::step(){
         A = L;
         break;
     case 0x7E:
-        A = _memory.read(setTo16(H,L));
+        A = _memory->read(setTo16(H,L));
         break;
     case 0x7F:
         //A = A; 
@@ -643,7 +644,7 @@ void Cpu::step(){
         break;
     case 0x86:
     {
-        uint8_t data = _memory.read(setTo16(H,L));
+        uint8_t data = _memory->read(setTo16(H,L));
         A = addR8(A,data);
         break;
     }
@@ -670,7 +671,7 @@ void Cpu::step(){
         break;
     case 0x8E:
     {
-        uint8_t data = _memory.read(setTo16(H,L));
+        uint8_t data = _memory->read(setTo16(H,L));
         A = adcR8(A,data);
                 break;
     }
@@ -697,7 +698,7 @@ void Cpu::step(){
         break;
     case 0x96:
     {
-        uint8_t data = _memory.read(setTo16(H,L));
+        uint8_t data = _memory->read(setTo16(H,L));
         A = subR8(A,data);
         break;
     }
@@ -724,7 +725,7 @@ void Cpu::step(){
         break;
     case 0x9E:
     {
-        uint8_t data = _memory.read(setTo16(H,L));
+        uint8_t data = _memory->read(setTo16(H,L));
         A = sbcR8(A,data);
         break;
     }
@@ -751,7 +752,7 @@ void Cpu::step(){
         break;
     case 0xA6:
     {
-        uint8_t data = _memory.read(setTo16(H,L));
+        uint8_t data = _memory->read(setTo16(H,L));
         A = andR8(A,data);
         break;
     }
@@ -778,7 +779,7 @@ void Cpu::step(){
         break;
     case 0xAE:
     {
-        uint8_t data = _memory.read(setTo16(H,L));
+        uint8_t data = _memory->read(setTo16(H,L));
         A = xorR8(A,data);
         break;
     }
@@ -805,7 +806,7 @@ void Cpu::step(){
         break;
     case 0xB6:
     {
-        uint8_t data = _memory.read(setTo16(H,L));
+        uint8_t data = _memory->read(setTo16(H,L));
         A = orR8(A,data);
         break;
     }
@@ -832,7 +833,7 @@ void Cpu::step(){
         break;
     case 0xBE:
     {
-        uint8_t data = _memory.read(setTo16(H,L));
+        uint8_t data = _memory->read(setTo16(H,L));
         subR8(A,data);
         break;
     }
@@ -1073,7 +1074,7 @@ void Cpu::step(){
     {
         uint8_t lo = fetch();
         uint16_t adress = setTo16(0xFF, lo);
-        _memory.write(adress,A);
+        _memory->write(adress,A);
         break;
     }
     case 0xE1:
@@ -1086,7 +1087,7 @@ void Cpu::step(){
     case 0xE2:
     {
         uint16_t adress = setTo16(0xFF,C);
-        _memory.write(adress,A);
+        _memory->write(adress,A);
         break;
     }
     case 0xE5:  
@@ -1130,7 +1131,7 @@ void Cpu::step(){
         uint8_t lo = fetch();
         uint8_t hi = fetch();
         uint16_t adress = setTo16(hi,lo);
-        _memory.write(adress,A);
+        _memory->write(adress,A);
         break;
     }
     case 0xEE:
@@ -1146,7 +1147,7 @@ void Cpu::step(){
     {
         uint8_t lo = fetch();
         uint16_t adress = setTo16(0xFF,lo);
-        A = _memory.read(adress);
+        A = _memory->read(adress);
         break;
     }
     case 0xF1:
@@ -1159,7 +1160,7 @@ void Cpu::step(){
     case 0xF2:
     {
         uint16_t adress = setTo16(0xFF,C);
-        A = _memory.read(adress);
+        A = _memory->read(adress);
         break;
     }
     case 0xF3:
@@ -1210,7 +1211,7 @@ void Cpu::step(){
         uint8_t lo = fetch();
         uint8_t hi= fetch();
         uint16_t adress = setTo16(hi,lo);
-        A = _memory.read(adress);
+        A = _memory->read(adress);
         break;
     }
     case 0xFB:
@@ -1249,9 +1250,9 @@ void Cpu::step(){
                 break;
             case 0x06:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 data = rlcR8(data);
-                _memory.write(setTo16(H,L),data);
+                _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0x07:
@@ -1277,9 +1278,9 @@ void Cpu::step(){
                 break;
             case 0x0E:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 data = rrcR8(data);
-                _memory.write(setTo16(H,L), data);
+                _memory->write(setTo16(H,L), data);
                 break;
             }
             case 0x0F:
@@ -1305,9 +1306,9 @@ void Cpu::step(){
                 break;
             case 0x16:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 data = rlR8(data);
-                _memory.write(setTo16(H,L), data);
+                _memory->write(setTo16(H,L), data);
                 break;
             }
             case 0x17:
@@ -1333,9 +1334,9 @@ void Cpu::step(){
                 break;
             case 0x1E:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 data = rrR8(data);
-                _memory.write(setTo16(H,L),data);
+                _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0x1F:
@@ -1361,9 +1362,9 @@ void Cpu::step(){
                 break;
             case 0x26:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 data = slaR8(data);
-                _memory.write(setTo16(H,L),data);
+                _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0x27:  
@@ -1389,9 +1390,9 @@ void Cpu::step(){
                 break;
             case 0x2E:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 data = sraR8(data);
-                _memory.write(setTo16(H,L),data);
+                _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0x2F:
@@ -1417,9 +1418,9 @@ void Cpu::step(){
                 break;
             case 0x36:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 data = swapR8(data);
-                _memory.write(setTo16(H,L),data);
+                _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0x37:
@@ -1445,9 +1446,9 @@ void Cpu::step(){
                 break;
             case 0x3E:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 data = slrR8(data);
-                _memory.write(setTo16(H,L),data);
+                _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0x3F:
@@ -1473,7 +1474,7 @@ void Cpu::step(){
                 break;
             case 0x46:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 bitU3(0,data);
                 break;
             }
@@ -1500,7 +1501,7 @@ void Cpu::step(){
                 break;
             case 0x4E:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 bitU3(1,data);
                 break;
             }
@@ -1527,7 +1528,7 @@ void Cpu::step(){
                 break;
             case 0x56:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 bitU3(2,data);
                 break;
             }
@@ -1554,7 +1555,7 @@ void Cpu::step(){
                 break;
             case 0x5E:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 bitU3(3,data);
                 break;
             }
@@ -1581,7 +1582,7 @@ void Cpu::step(){
                 break;
             case 0x66:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 bitU3(4,data);
                 break;
             }
@@ -1608,7 +1609,7 @@ void Cpu::step(){
                 break;
             case 0x6E:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 bitU3(5,data);
                 break;
             }
@@ -1635,7 +1636,7 @@ void Cpu::step(){
                 break;
             case 0x76:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 bitU3(6,data);
                 break;
             }
@@ -1662,7 +1663,7 @@ void Cpu::step(){
                 break;
             case 0x7E:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 bitU3(7,data);
                 break;
             }
@@ -1689,7 +1690,7 @@ void Cpu::step(){
                 break;
             case 0x86:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 resU3(0,data);
                 break;
             }
@@ -1716,7 +1717,7 @@ void Cpu::step(){
                 break;
             case 0x8E:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 resU3(1,data);
                 break;
             }
@@ -1743,7 +1744,7 @@ void Cpu::step(){
                 break;
             case 0x96:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 resU3(2,data);
                 break;
             }
@@ -1770,7 +1771,7 @@ void Cpu::step(){
                 break;
             case 0x9E:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 resU3(3,data);
                 break;
             }
@@ -1797,7 +1798,7 @@ void Cpu::step(){
                 break;
             case 0xA6:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 resU3(4,data);
                 break;
             }
@@ -1824,7 +1825,7 @@ void Cpu::step(){
                 break;
             case 0xAE:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 resU3(5,data);
                 break;
             }
@@ -1851,7 +1852,7 @@ void Cpu::step(){
                 break;
             case 0xB6:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 resU3(6,data);
                 break;
             }
@@ -1878,7 +1879,7 @@ void Cpu::step(){
                 break;
             case 0xBE:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 resU3(7,data);
                 break;
             }
@@ -1905,7 +1906,7 @@ void Cpu::step(){
                 break;
             case 0xC6:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 setU3(0,data);
                 break;
             }
@@ -1932,7 +1933,7 @@ void Cpu::step(){
                 break;
             case 0xCE:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 setU3(1,data);
                 break;
             }
@@ -1959,7 +1960,7 @@ void Cpu::step(){
                 break;
             case 0xD6:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 setU3(2,data);
                 break;
             }
@@ -1986,7 +1987,7 @@ void Cpu::step(){
                 break;
             case 0xDE:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 setU3(3,data);
                 break;
             }
@@ -2013,7 +2014,7 @@ void Cpu::step(){
                 break;
             case 0xE6:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 setU3(4,data);
                 break;
             }
@@ -2040,7 +2041,7 @@ void Cpu::step(){
                 break;
             case 0xEE:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 setU3(5,data);
                 break;
             }
@@ -2067,7 +2068,7 @@ void Cpu::step(){
                 break;
             case 0xF6:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 setU3(6,data);
                 break;
             }
@@ -2094,7 +2095,7 @@ void Cpu::step(){
                 break;
             case 0xFE:
             {
-                uint8_t data = _memory.read(setTo16(H,L));
+                uint8_t data = _memory->read(setTo16(H,L));
                 setU3(7,data);
                 break;
             }
@@ -2112,13 +2113,13 @@ void Cpu::step(){
 
 }
 
-Cpu::Cpu(Memory &mem) : _memory(mem){
+Cpu::Cpu(Memory *mem) : _memory(mem){
    
 }
 
 uint8_t Cpu::fetch(){
     
-    uint8_t data = _memory.read(PC);
+    uint8_t data = _memory->read(PC);
     PC++;
     return data;
 }
@@ -2171,27 +2172,35 @@ uint8_t Cpu::getC(){
 reg8 Cpu::incrementR8(reg8 reg){
     setN(0);
 
-    if((reg + 1)== 0){
+    if((uint8_t)(reg + 1) == 0){
         setZ(1);
+        }else{
+            setZ(0);
         }
     if(((reg & 0xF) + 1) > 0xF){//half carry (check for carry on the 3rd bit)
         setH(1);
-    } 
-        
-    return reg++;
+    } else{
+        setH(0);
+    }
+    
+    return ++reg;
 }
 
 
 reg8 Cpu::decrementR8(reg8 reg){
     setN(1);
-    if((reg - 1) == 0){
+    if((uint8_t)(reg - 1) == 0){
         setZ(1);
+    }else{
+        setZ(0);
     }
     if((reg & 0xF) < 1){
         setH(1);
+    }else{
+        setH(0);
     }
 
-    return reg--;
+    return --reg;
 }
 
 reg16 Cpu::addR16(reg16 regA, reg16 regB){
@@ -2200,9 +2209,13 @@ reg16 Cpu::addR16(reg16 regA, reg16 regB){
         setN(0);
         if(((regA & 0xFFF) + (regB & 0xFFF)) > 0xFFF){
             setH(1);
+        }else{
+            setH(0);
         }
         if(result > 0xFFFF){
             setC(1);
+        }else{
+            setC(0);
         }
 
         return regA + regB;
@@ -2212,16 +2225,22 @@ reg8 Cpu::addR8(reg8 regA, reg8 regB){
 
     setN(0);
 
-    if(regA + regB == 0){
+    if((uint8_t)(regA + regB) == 0){
         setZ(1);
+    }else{
+        setZ(0);
     }
 
     if(((regA & 0xF) + (regB & 0xF)) > 0xF){
         setH(1);
-    } 
+    } else{
+        setH(0);
+    }
 
     if(regA + regB > 0xFF){
         setC(1);
+    }else{
+        setC(0);
     }
 
     return regA + regB;
@@ -2232,16 +2251,22 @@ reg8 Cpu::adcR8(reg8 regA, reg8 regB){
 
     setN(0);
 
-    if(regA + regB + getC() == 0){
+    if((uint8_t)(regA + regB + getC()) == 0){
         setZ(1);
+    }else{
+        setZ(0);
     }
 
     if(((regA & 0xF) + (regB & 0xF)) + getC() > 0xF){
         setH(1);
-    } 
+    } else{
+        setH(0);
+    }
 
     if(regA + regB + getC() > 0xFF){
         setC(1);
+    }else{
+        setC(0);
     }
 
     return regA + regB + getC();
@@ -2252,16 +2277,22 @@ reg8 Cpu::subR8(reg8 regA, reg8 regB){
 
     setN(1);
 
-    if(regA - regB== 0){
+    if((uint8_t)(regA - regB) == 0){
         setZ(1);
+    }else{
+        setZ(0);
     }
 
     if((regB & 0xF) > (regA & 0xF)){
         setH(1);
-    } 
+    } else{
+        setH(0);
+    }
 
     if(regB > regA){
         setC(1);
+    }else{
+        setC(0);
     }
 
     return regA - regB;
@@ -2271,16 +2302,22 @@ reg8 Cpu::sbcR8(reg8 regA, reg8 regB){
 
     setN(1);
 
-    if(regA - regB - getC()== 0){
+    if((uint8_t)(regA - regB - getC())== 0){
         setZ(1);
+    }else{
+        setZ(0);
     }
 
     if(((regB & 0xF) + getC()) > (regA & 0xF)){
         setH(1);
-    } 
+    } else{
+        setH(0);
+    }
 
     if((regB + getC()) > regA){
         setC(1);
+    }else{
+        setC(0);
     }
 
     return regA - regB - getC();
@@ -2293,6 +2330,8 @@ reg8 Cpu::andR8(reg8 regA, reg8 regB){
 
     if((regA & regB) == 0){
         setZ(1);
+    }else{
+        setZ(0);
     }
 
     return (regA & regB);
@@ -2305,6 +2344,8 @@ reg8 Cpu::xorR8(reg8 regA, reg8 regB){
 
     if((regA ^ regB) == 0){
         setZ(1);
+    }else{
+        setZ(0);
     }
 
     return (regA ^ regB);
@@ -2317,15 +2358,17 @@ reg8 Cpu::orR8(reg8 regA, reg8 regB){
 
     if((regA | regB) == 0){
         setZ(1);
+    }else{
+        setZ(0);
     }
 
     return (regA | regB);
 }
 
 reg16 Cpu::popR16(){
-    uint8_t lo = _memory.read(SP);
+    uint8_t lo = _memory->read(SP);
     SP++;
-    uint8_t hi = _memory.read(SP);
+    uint8_t hi = _memory->read(SP);
     SP++;
 
     return setTo16(hi,lo);
@@ -2333,9 +2376,9 @@ reg16 Cpu::popR16(){
 
 void Cpu::pushR16(reg8 hi, reg8 lo){
     SP--;
-    _memory.write(SP,hi);
+    _memory->write(SP,hi);
     SP--;
-    _memory.write(SP,lo);
+    _memory->write(SP,lo);
 }
 
 void Cpu::rst(uint16_t vector){
@@ -2357,6 +2400,8 @@ reg8 Cpu::rlcR8(reg8 reg){
     reg = (reg << 1) | bit;
     if(reg == 0){
         setZ(1);
+    }else{
+        setZ(0);
     }
 
     return reg;
@@ -2370,7 +2415,7 @@ reg8 Cpu::rrcR8(reg8 reg){
     reg = (reg >> 1) | (bit << 7);
     if(reg == 0){
         setZ(1);
-    }
+    }else{setZ(0);}
     return reg;
 }
 
@@ -2382,6 +2427,8 @@ reg8 Cpu::rlR8(reg8 reg){
     reg = (reg << 1) | new_bit;
     if(reg == 0){
         setZ(1);
+    }else{
+        setZ(0);
     }
     
     setC(bit);
@@ -2398,6 +2445,8 @@ reg8 Cpu::rrR8(reg8 reg)
     reg = (reg >> 1) | (new_bit << 7);
     if(reg == 0){
         setZ(1);
+    }else{
+        setZ(0);
     }
     setC(bit);
 
@@ -2413,6 +2462,8 @@ reg8 Cpu::slaR8(reg8 reg)
     reg = reg << 1;
     if(reg == 0){
         setZ(1);
+    }else{
+        setZ(0);
     }
     return reg;
 }
@@ -2427,6 +2478,8 @@ reg8 Cpu::sraR8(reg8 reg)
     reg = (bit << 7) | (reg >> 1);
     if(reg == 0){
         setZ(1);
+    }else{
+        setZ(0);
     }
     return reg;
 }
@@ -2441,6 +2494,8 @@ reg8 Cpu::swapR8(reg8 reg){
     reg = (lower << 4) | upper;
 
     if(reg == 0){
+        setZ(1);
+    }else{
         setZ(0);
     }
     return reg;
@@ -2455,6 +2510,8 @@ reg8 Cpu::slrR8(reg8 reg){
     reg = reg >> 1;
     if(reg == 0){
         setZ(1);
+    }else{
+        setZ(0);
     }
 
     return reg;
@@ -2466,6 +2523,8 @@ void Cpu::bitU3(uint8_t bit, reg8 reg){
 
     if(((reg >> bit) & 1) == 0){
         setZ(1);
+    }else{
+        setZ(0);
     }
 }
 
@@ -2482,4 +2541,18 @@ void Cpu::tick(){
 
 }
 
+void Cpu::reset(){
+    A = 0x01;
+    F = 0b0000;
+    B = 0xFF;
+    C = 0x13;
+    D = 0x00;
+    E = 0xC1;
+    H = 0x84;
+    L = 0x03;
+    PC = 0x100;
+    SP = 0xFFFE;
+    ime_flag = 0;
+    ime_next = 0;
+}
 
