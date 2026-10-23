@@ -7,7 +7,7 @@ using reg16 = uint16_t;
 
 class Cpu{
 
-private:
+public:
     reg8 A = 0x01;
     reg8 F = 0b0000;
     reg8 B = 0xFF;
@@ -19,12 +19,11 @@ private:
     reg16 PC = 0x100;
     reg16 SP = 0xFFFE;
     uint8_t ime_flag = 0;
-    Memory &memory;
+    uint8_t ime_next = 0;
+    Memory &_memory;
 
-
-    public:
     Cpu(Memory &mem);
-    void execute();
+    void step();
     void tick();
     uint8_t fetch();
     uint16_t setTo16(uint8_t hi,uint8_t lo);

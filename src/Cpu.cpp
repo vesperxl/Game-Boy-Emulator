@@ -5,14 +5,14 @@
 #include"Memory.hpp"
 
 
-void Cpu::execute(){
+void Cpu::step(){
 
     uint8_t opcode = fetch();
 
     switch (opcode & 0xFF)
     {
     case 0x00:
-        break;
+        break;  
     case 0x01:
         C = fetch();
         B = fetch();
@@ -20,7 +20,7 @@ void Cpu::execute(){
     case 0x02:
     {
         uint16_t BC = setTo16(B,C);
-        memory.write(BC,A);
+        _memory.write(BC,A);
         break;
     }
     case 0x03:
@@ -57,10 +57,10 @@ void Cpu::execute(){
         uint8_t hi = fetch();
         uint16_t adress = setTo16(hi,lo);
         uint8_t data = getSecondByte(SP);
-        memory.write(adress,data);
+        _memory.write(adress,data);
         data = getFirstByte(SP);
         adress++;
-        memory.write(adress,data);
+        _memory.write(adress,data);
         break;
     }
     case 0x09:
@@ -75,7 +75,7 @@ void Cpu::execute(){
         break;
     }
     case 0x0A:
-        A = memory.read(setTo16(B,C));
+        A = _memory.read(setTo16(B,C));
         break;
     case 0x0B:
     {
@@ -115,7 +115,7 @@ void Cpu::execute(){
     case 0x12:
     {
         uint16_t DE = setTo16(B,C);
-        memory.write(DE,A);
+        _memory.write(DE,A);
         break;
     }
     case 0x13:
@@ -165,7 +165,7 @@ void Cpu::execute(){
         break;
     }
     case 0x1A:
-        A = memory.read(setTo16(D,E));
+        A = _memory.read(setTo16(D,E));
         break;
     case 0x1B:
     {
@@ -212,7 +212,7 @@ void Cpu::execute(){
     case 0x22:
     {
         reg16 HL = setTo16(H,L);
-        memory.write(HL,A);
+        _memory.write(HL,A);
         HL++;
         H = getFirstByte(HL);
         L = getSecondByte(HL);
@@ -290,7 +290,7 @@ void Cpu::execute(){
     case 0x2A:
     {
         reg16 HL = setTo16(H,L);
-        A = memory.read(HL);
+        A = _memory.read(HL);
         HL++;
         H = getFirstByte(HL);
         L = getSecondByte(HL);
@@ -341,7 +341,7 @@ void Cpu::execute(){
     case 0x32:
     {
         reg16 HL = setTo16(H,L);
-        memory.write(HL,A);
+        _memory.write(HL,A);
         HL--;
         H = getFirstByte(HL);
         L = getSecondByte(HL);
@@ -353,22 +353,22 @@ void Cpu::execute(){
         break;
     case 0x34:
     {
-        uint8_t data = memory.read(setTo16(H,L));
+        uint8_t data = _memory.read(setTo16(H,L));
         incrementR8(data);
-        memory.write(setTo16(H,L),data);
+        _memory.write(setTo16(H,L),data);
         break;
     }
     case 0x35:
     {
-        uint8_t data = memory.read(setTo16(H,L));
+        uint8_t data = _memory.read(setTo16(H,L));
         decrementR8(data);
-        memory.write(setTo16(H,L),data);
+        _memory.write(setTo16(H,L),data);
         break;
     }
     case 0x36:
     {
         uint8_t data = fetch();
-        memory.write(setTo16(H,L),data);
+        _memory.write(setTo16(H,L),data);
         break;
     }
     case 0x37:
@@ -395,7 +395,7 @@ void Cpu::execute(){
     case 0x3A:
     {
         reg16 HL = setTo16(H,L);
-        A = memory.read(HL);
+        A = _memory.read(HL);
         HL--;
         H = getFirstByte(HL);
         L = getSecondByte(HL);
@@ -424,7 +424,7 @@ void Cpu::execute(){
         }
         break;
     case 0x40:
-        B = B;
+        //B = B;
         break;
     case 0x41:
         B = C;
@@ -442,7 +442,7 @@ void Cpu::execute(){
         B = L;
         break;
     case 0x46:
-        B = memory.read(setTo16(H,L));
+        B = _memory.read(setTo16(H,L));
         break;
     case 0x47:
         B = A;
@@ -451,7 +451,7 @@ void Cpu::execute(){
         C = B;
         break;
     case 0x49:
-        C = C;
+        //C = C;
         break;
     case 0x4A: 
         C = D;
@@ -466,7 +466,7 @@ void Cpu::execute(){
         C = L;
         break;
     case 0x4E:
-        C = memory.read(setTo16(H,L));
+        C = _memory.read(setTo16(H,L));
         break;
     case 0x4F:
         C = A;
@@ -478,7 +478,7 @@ void Cpu::execute(){
         D = C;
         break;
     case 0x52:
-        D = D;
+        //D = D;
         break;
     case 0x53:
         D = E;
@@ -490,7 +490,7 @@ void Cpu::execute(){
         D = L;
         break;
     case 0x56:
-        D = memory.read(setTo16(H,L));
+        D = _memory.read(setTo16(H,L));
         break;
     case 0x57:
         D = A;
@@ -505,7 +505,7 @@ void Cpu::execute(){
         E = D;
         break;
     case 0x5B:
-        E = E;
+        //E = E;
         break;
     case 0x5C:
         E = H;
@@ -514,7 +514,7 @@ void Cpu::execute(){
         E = L;
         break;
     case 0x5E:
-        E = memory.read(setTo16(H,L));
+        E = _memory.read(setTo16(H,L));
         break;
     case 0x5F:
         E = A;
@@ -532,13 +532,13 @@ void Cpu::execute(){
         H = E;
         break;
     case 0x64:
-        H = H;
+        //H = H;
         break;
     case 0x65:
         H = L;
         break;
     case 0x66:
-        H = memory.read(setTo16(H,L));
+        H = _memory.read(setTo16(H,L));
         break;
     case 0x67:
         H = A;
@@ -559,31 +559,31 @@ void Cpu::execute(){
         L = H;
         break;
     case 0x6D:
-        L = L;
+        //L = L;
         break;
     case 0x6E:
-        L = memory.read(setTo16(H,L));
+        L = _memory.read(setTo16(H,L));
         break;
     case 0x6F:
         L = A;
         break;
     case 0x70:
-        memory.write(setTo16(H,L), B);
+        _memory.write(setTo16(H,L), B);
         break;
     case 0x71:
-        memory.write(setTo16(H,L), C);
+        _memory.write(setTo16(H,L), C);
         break;
     case 0x72:
-        memory.write(setTo16(H,L), D);
+        _memory.write(setTo16(H,L), D);
         break;
     case 0x73:
-        memory.write(setTo16(H,L), E);
+        _memory.write(setTo16(H,L), E);
         break;
     case 0x74:
-        memory.write(setTo16(H,L), H);
+        _memory.write(setTo16(H,L), H);
         break;
     case 0x75:
-        memory.write(setTo16(H,L), L);
+        _memory.write(setTo16(H,L), L);
         break;
     case 0x76:
         //TODO
@@ -597,7 +597,7 @@ void Cpu::execute(){
         //TODO 
         break;
     case 0x77:
-        memory.write(setTo16(H,L), A);
+        _memory.write(setTo16(H,L), A);
         break;
     case 0x78:  
         A = B;
@@ -618,10 +618,10 @@ void Cpu::execute(){
         A = L;
         break;
     case 0x7E:
-        A = memory.read(setTo16(H,L));
+        A = _memory.read(setTo16(H,L));
         break;
     case 0x7F:
-        A = A; 
+        //A = A; 
         break;
     case 0x80:
         A = addR8(A,B);
@@ -643,7 +643,7 @@ void Cpu::execute(){
         break;
     case 0x86:
     {
-        uint8_t data = memory.read(setTo16(H,L));
+        uint8_t data = _memory.read(setTo16(H,L));
         A = addR8(A,data);
         break;
     }
@@ -670,7 +670,7 @@ void Cpu::execute(){
         break;
     case 0x8E:
     {
-        uint8_t data = memory.read(setTo16(H,L));
+        uint8_t data = _memory.read(setTo16(H,L));
         A = adcR8(A,data);
                 break;
     }
@@ -697,7 +697,7 @@ void Cpu::execute(){
         break;
     case 0x96:
     {
-        uint8_t data = memory.read(setTo16(H,L));
+        uint8_t data = _memory.read(setTo16(H,L));
         A = subR8(A,data);
         break;
     }
@@ -724,7 +724,7 @@ void Cpu::execute(){
         break;
     case 0x9E:
     {
-        uint8_t data = memory.read(setTo16(H,L));
+        uint8_t data = _memory.read(setTo16(H,L));
         A = sbcR8(A,data);
         break;
     }
@@ -751,7 +751,7 @@ void Cpu::execute(){
         break;
     case 0xA6:
     {
-        uint8_t data = memory.read(setTo16(H,L));
+        uint8_t data = _memory.read(setTo16(H,L));
         A = andR8(A,data);
         break;
     }
@@ -778,7 +778,7 @@ void Cpu::execute(){
         break;
     case 0xAE:
     {
-        uint8_t data = memory.read(setTo16(H,L));
+        uint8_t data = _memory.read(setTo16(H,L));
         A = xorR8(A,data);
         break;
     }
@@ -805,7 +805,7 @@ void Cpu::execute(){
         break;
     case 0xB6:
     {
-        uint8_t data = memory.read(setTo16(H,L));
+        uint8_t data = _memory.read(setTo16(H,L));
         A = orR8(A,data);
         break;
     }
@@ -832,7 +832,7 @@ void Cpu::execute(){
         break;
     case 0xBE:
     {
-        uint8_t data = memory.read(setTo16(H,L));
+        uint8_t data = _memory.read(setTo16(H,L));
         subR8(A,data);
         break;
     }
@@ -1073,7 +1073,7 @@ void Cpu::execute(){
     {
         uint8_t lo = fetch();
         uint16_t adress = setTo16(0xFF, lo);
-        memory.write(adress,A);
+        _memory.write(adress,A);
         break;
     }
     case 0xE1:
@@ -1086,7 +1086,7 @@ void Cpu::execute(){
     case 0xE2:
     {
         uint16_t adress = setTo16(0xFF,C);
-        memory.write(adress,A);
+        _memory.write(adress,A);
         break;
     }
     case 0xE5:  
@@ -1130,7 +1130,7 @@ void Cpu::execute(){
         uint8_t lo = fetch();
         uint8_t hi = fetch();
         uint16_t adress = setTo16(hi,lo);
-        memory.write(adress,A);
+        _memory.write(adress,A);
         break;
     }
     case 0xEE:
@@ -1146,7 +1146,7 @@ void Cpu::execute(){
     {
         uint8_t lo = fetch();
         uint16_t adress = setTo16(0xFF,lo);
-        A = memory.read(adress);
+        A = _memory.read(adress);
         break;
     }
     case 0xF1:
@@ -1159,11 +1159,12 @@ void Cpu::execute(){
     case 0xF2:
     {
         uint16_t adress = setTo16(0xFF,C);
-        A = memory.read(adress);
+        A = _memory.read(adress);
         break;
     }
     case 0xF3:
         ime_flag = 0;
+        ime_next = 0;
         break;
     case 0xF5:  
     {
@@ -1209,11 +1210,11 @@ void Cpu::execute(){
         uint8_t lo = fetch();
         uint8_t hi= fetch();
         uint16_t adress = setTo16(hi,lo);
-        A = memory.read(adress);
+        A = _memory.read(adress);
         break;
     }
     case 0xFB:
-        ime_flag = 1;
+        ime_next = 1;
         break;
     case 0xFE:
     {
@@ -1248,9 +1249,9 @@ void Cpu::execute(){
                 break;
             case 0x06:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 data = rlcR8(data);
-                memory.write(setTo16(H,L),data);
+                _memory.write(setTo16(H,L),data);
                 break;
             }
             case 0x07:
@@ -1276,9 +1277,9 @@ void Cpu::execute(){
                 break;
             case 0x0E:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 data = rrcR8(data);
-                memory.write(setTo16(H,L), data);
+                _memory.write(setTo16(H,L), data);
                 break;
             }
             case 0x0F:
@@ -1304,9 +1305,9 @@ void Cpu::execute(){
                 break;
             case 0x16:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 data = rlR8(data);
-                memory.write(setTo16(H,L), data);
+                _memory.write(setTo16(H,L), data);
                 break;
             }
             case 0x17:
@@ -1332,9 +1333,9 @@ void Cpu::execute(){
                 break;
             case 0x1E:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 data = rrR8(data);
-                memory.write(setTo16(H,L),data);
+                _memory.write(setTo16(H,L),data);
                 break;
             }
             case 0x1F:
@@ -1360,9 +1361,9 @@ void Cpu::execute(){
                 break;
             case 0x26:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 data = slaR8(data);
-                memory.write(setTo16(H,L),data);
+                _memory.write(setTo16(H,L),data);
                 break;
             }
             case 0x27:  
@@ -1388,9 +1389,9 @@ void Cpu::execute(){
                 break;
             case 0x2E:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 data = sraR8(data);
-                memory.write(setTo16(H,L),data);
+                _memory.write(setTo16(H,L),data);
                 break;
             }
             case 0x2F:
@@ -1416,9 +1417,9 @@ void Cpu::execute(){
                 break;
             case 0x36:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 data = swapR8(data);
-                memory.write(setTo16(H,L),data);
+                _memory.write(setTo16(H,L),data);
                 break;
             }
             case 0x37:
@@ -1444,9 +1445,9 @@ void Cpu::execute(){
                 break;
             case 0x3E:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 data = slrR8(data);
-                memory.write(setTo16(H,L),data);
+                _memory.write(setTo16(H,L),data);
                 break;
             }
             case 0x3F:
@@ -1472,7 +1473,7 @@ void Cpu::execute(){
                 break;
             case 0x46:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 bitU3(0,data);
                 break;
             }
@@ -1499,7 +1500,7 @@ void Cpu::execute(){
                 break;
             case 0x4E:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 bitU3(1,data);
                 break;
             }
@@ -1526,7 +1527,7 @@ void Cpu::execute(){
                 break;
             case 0x56:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 bitU3(2,data);
                 break;
             }
@@ -1553,7 +1554,7 @@ void Cpu::execute(){
                 break;
             case 0x5E:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 bitU3(3,data);
                 break;
             }
@@ -1580,7 +1581,7 @@ void Cpu::execute(){
                 break;
             case 0x66:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 bitU3(4,data);
                 break;
             }
@@ -1607,7 +1608,7 @@ void Cpu::execute(){
                 break;
             case 0x6E:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 bitU3(5,data);
                 break;
             }
@@ -1634,7 +1635,7 @@ void Cpu::execute(){
                 break;
             case 0x76:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 bitU3(6,data);
                 break;
             }
@@ -1661,7 +1662,7 @@ void Cpu::execute(){
                 break;
             case 0x7E:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 bitU3(7,data);
                 break;
             }
@@ -1688,7 +1689,7 @@ void Cpu::execute(){
                 break;
             case 0x86:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 resU3(0,data);
                 break;
             }
@@ -1715,7 +1716,7 @@ void Cpu::execute(){
                 break;
             case 0x8E:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 resU3(1,data);
                 break;
             }
@@ -1742,7 +1743,7 @@ void Cpu::execute(){
                 break;
             case 0x96:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 resU3(2,data);
                 break;
             }
@@ -1769,7 +1770,7 @@ void Cpu::execute(){
                 break;
             case 0x9E:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 resU3(3,data);
                 break;
             }
@@ -1796,7 +1797,7 @@ void Cpu::execute(){
                 break;
             case 0xA6:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 resU3(4,data);
                 break;
             }
@@ -1823,7 +1824,7 @@ void Cpu::execute(){
                 break;
             case 0xAE:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 resU3(5,data);
                 break;
             }
@@ -1850,7 +1851,7 @@ void Cpu::execute(){
                 break;
             case 0xB6:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 resU3(6,data);
                 break;
             }
@@ -1877,7 +1878,7 @@ void Cpu::execute(){
                 break;
             case 0xBE:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 resU3(7,data);
                 break;
             }
@@ -1904,7 +1905,7 @@ void Cpu::execute(){
                 break;
             case 0xC6:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 setU3(0,data);
                 break;
             }
@@ -1931,7 +1932,7 @@ void Cpu::execute(){
                 break;
             case 0xCE:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 setU3(1,data);
                 break;
             }
@@ -1958,7 +1959,7 @@ void Cpu::execute(){
                 break;
             case 0xD6:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 setU3(2,data);
                 break;
             }
@@ -1985,7 +1986,7 @@ void Cpu::execute(){
                 break;
             case 0xDE:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 setU3(3,data);
                 break;
             }
@@ -2012,7 +2013,7 @@ void Cpu::execute(){
                 break;
             case 0xE6:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 setU3(4,data);
                 break;
             }
@@ -2039,7 +2040,7 @@ void Cpu::execute(){
                 break;
             case 0xEE:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 setU3(5,data);
                 break;
             }
@@ -2066,7 +2067,7 @@ void Cpu::execute(){
                 break;
             case 0xF6:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 setU3(6,data);
                 break;
             }
@@ -2093,7 +2094,7 @@ void Cpu::execute(){
                 break;
             case 0xFE:
             {
-                uint8_t data = memory.read(setTo16(H,L));
+                uint8_t data = _memory.read(setTo16(H,L));
                 setU3(7,data);
                 break;
             }
@@ -2103,9 +2104,6 @@ void Cpu::execute(){
         }
         
 
-
-
-
     }
     default:
         break;
@@ -2114,13 +2112,13 @@ void Cpu::execute(){
 
 }
 
-Cpu::Cpu(Memory &mem) : memory(mem){
+Cpu::Cpu(Memory &mem) : _memory(mem){
    
 }
 
 uint8_t Cpu::fetch(){
     
-    uint8_t data = memory.read(PC);
+    uint8_t data = _memory.read(PC);
     PC++;
     return data;
 }
@@ -2325,9 +2323,9 @@ reg8 Cpu::orR8(reg8 regA, reg8 regB){
 }
 
 reg16 Cpu::popR16(){
-    uint8_t lo = memory.read(SP);
+    uint8_t lo = _memory.read(SP);
     SP++;
-    uint8_t hi = memory.read(SP);
+    uint8_t hi = _memory.read(SP);
     SP++;
 
     return setTo16(hi,lo);
@@ -2335,9 +2333,9 @@ reg16 Cpu::popR16(){
 
 void Cpu::pushR16(reg8 hi, reg8 lo){
     SP--;
-    memory.write(SP,hi);
+    _memory.write(SP,hi);
     SP--;
-    memory.write(SP,lo);
+    _memory.write(SP,lo);
 }
 
 void Cpu::rst(uint16_t vector){
@@ -2483,4 +2481,5 @@ reg8 Cpu::setU3(uint8_t bit, reg8 reg){
 void Cpu::tick(){
 
 }
+
 

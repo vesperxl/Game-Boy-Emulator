@@ -8,7 +8,7 @@ class Memory{
 private:
     //std::vector<uint8_t> rom;
 
-    std::array<uint8_t, 0xFFFF> _memory = {0};
+    std::array<uint8_t, 0xFFFF> _memoryBank = {0};
 
 public:
     uint8_t read(uint16_t adress);
