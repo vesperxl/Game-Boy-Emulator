@@ -18,7 +18,7 @@ class Test{
         Test();
         json parseFile(std::string path);
         uint8_t runSingleTest(uint8_t i, const json& data);
-        void runJsonFile(const json& data);
+        uint16_t runJsonFile(const json& data);
         void runAllTests();
         void runDetailedSingleTest(const uint8_t i, const json& data);
         void runDetailedJsonFile(const json& data);

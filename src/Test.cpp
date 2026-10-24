@@ -64,7 +64,7 @@ uint8_t Test::runSingleTest(uint8_t i, const json& jsonFile){
 }
 
 
-void Test::runJsonFile(const json& data){
+uint16_t Test::runJsonFile(const json& data){
     int count = 0;
     for(int i = 0; i < 1000;i++){
         _cpu.reset();
@@ -73,29 +73,39 @@ void Test::runJsonFile(const json& data){
             count++;
         };
     }
-    std::cout << count << "/1000 tests successed \n"; 
     
+    return count;
+
 }
 
 
 void Test::runAllTests(){
     
-    std::string path = "/Users/vesperal/Documents/Private/Game-Boy-Emulator/SingleStepTests/";
-
+    std::cout << "Executing all the tests...\n";
+    std::string path = "../SingleStepTests/";
     std::vector<std::filesystem::path> files;
     std::copy(std::filesystem::directory_iterator(path),std::filesystem::directory_iterator(),std::back_inserter(files));
     std::sort(files.begin(),files.end());
-
+    uint8_t prfct = 0;
     for(auto& filename : files){
 
         if(filename.string().substr(filename.string().length() - 9) == ".DS_Store"){
             continue;
         }
-        std::cout << "File : " << filename.string().substr(filename.string().find_last_of("/") + 1) << " ->  ";
+       
         json jsonFile = parseFile(filename.string());
-        runJsonFile(jsonFile);
+        uint16_t count;
+        if((count = runJsonFile(jsonFile)) != 1000){
+            std::cout << "File : " << filename.string().substr(filename.string().find_last_of("/") + 1) << " ->  " << count << "/1000 tests successed\n" ;
+            prfct = 1;
+        }
     }
 
+    if(prfct == 0){
+        std::cout << "All the tests succeed!\n";
+    }else{
+        std::cout << "All the others tests succeed\n";
+    }
 
 }
 
@@ -112,10 +122,25 @@ void Test::runDetailedSingleTest(uint8_t i, const json& jsonFile){
     _cpu.F = data["initial"]["f"];
     _cpu.H = data["initial"]["h"];
     _cpu.L = data["initial"]["l"];
+
+
+    std::cout << "INITIAL PC  : " << _cpu.PC << "\n";
+    std::cout << "INITIAL SP  : " << _cpu.SP << "\n";
+    std::cout << "INITIAL A  : " << +_cpu.A << "\n";
+    std::cout << "INITIAL B  : " << +_cpu.B << "\n";
+    std::cout << "INITIAL C  : " << +_cpu.C << "\n";
+    std::cout << "INITIAL D  : " << +_cpu.D << "\n";
+    std::cout << "INITIAL E  : " << +_cpu.E << "\n";
+    std::cout << "INITIAL F  : " << +_cpu.F << "\n";
+    std::cout << "INITIAL H  : " << +_cpu.H << "\n";
+    std::cout << "INITIAL L  : " << +_cpu.L << "\n";
     
     for(auto a: data["initial"]["ram"]){
         _memory->write(a[0], a[1]);
+        std::cout << "INITAL RAM AT " << a[0] << " : " << a[1] << "\n";
     }
+
+    std::cout << "\n";  
 
     _cpu.step();
 

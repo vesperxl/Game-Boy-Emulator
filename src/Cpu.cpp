@@ -115,7 +115,7 @@ void Cpu::step(){
         break;
     case 0x12:
     {
-        uint16_t DE = setTo16(B,C);
+        uint16_t DE = setTo16(D,E);
         _memory->write(DE,A);
         break;
     }
@@ -129,10 +129,10 @@ void Cpu::step(){
         break;
     }
     case 0x14:
-        incrementR8(D);
+        D =incrementR8(D);
         break;
     case 0x15:
-        decrementR8(D);
+        D = decrementR8(D);
         break;
     case 0x16:
         D = fetch();
@@ -144,7 +144,7 @@ void Cpu::step(){
         setN(0);
         setH(0);
         uint8_t new_bit = getC();
-        A = (A << 1) | new_bit;
+        A = ((A << 1) | new_bit);
         setC(bit);
         break;
     }
@@ -252,10 +252,10 @@ void Cpu::step(){
             A -= adj;
         }else{
             adj = 0;
-            if(getH() || (A & 0xF) > 0x9){
+            if(getH() || ((A & 0xF) > 0x9)){
                 adj += 0x6;
             }
-            if(getC() || A > 0x99){
+            if(getC() || (A > 0x99)){
                 adj += 0x60;
                 setC(1);
             }
@@ -265,6 +265,8 @@ void Cpu::step(){
         
         if(A == 0){
             setZ(1);
+        }else{
+            setZ(0);
         }
         setH(0);
         break;
@@ -355,14 +357,14 @@ void Cpu::step(){
     case 0x34:
     {
         uint8_t data = _memory->read(setTo16(H,L));
-        incrementR8(data);
+        data = incrementR8(data);
         _memory->write(setTo16(H,L),data);
         break;
     }
     case 0x35:
     {
         uint8_t data = _memory->read(setTo16(H,L));
-        decrementR8(data);
+        data= decrementR8(data);
         _memory->write(setTo16(H,L),data);
         break;
     }
@@ -373,11 +375,13 @@ void Cpu::step(){
         break;
     }
     case 0x37:
+        setN(0);
+        setH(0);
         setC(1);
         break;        
     case 0x38:
     {
-        uint8_t e = fetch();
+        int8_t e = fetch();
         if(getC()){
             PC += e;
             tick();
@@ -963,7 +967,7 @@ void Cpu::step(){
     case 0xCE:
     {
         uint8_t data = fetch();
-        A = addR8(A,data);
+        A = adcR8(A,data);
         break;
     }
     case 0xCF:  
@@ -1111,10 +1115,15 @@ void Cpu::step(){
 
         if(((SP & 0xF) + (e & 0xF)) > 0xF){
             setH(1);
+        }else{
+            setH(0);
         }
 
-        if(((SP & 0xFF) + e) > 0xFF){
+
+        if(((SP & 0xFF) + (e & 0xFF)) > 0xFF){
             setC(1);
+        }else{
+            setC(0);
         }
 
         SP += e;
@@ -1154,7 +1163,7 @@ void Cpu::step(){
     {
         reg16 AF = popR16();
         A = getFirstByte(AF);
-        F = getSecondByte(AF);
+        F = getSecondByte(AF) & 0xF0;
         break;
     }
     case 0xF2:
@@ -1190,17 +1199,21 @@ void Cpu::step(){
 
         if(((SP & 0xF) + (e & 0xF)) > 0xF){
             setH(1);
+        }else{
+            setH(0);
         }
 
-        if(((SP & 0xFF) + e) > 0xFF){
+        if(((SP & 0xFF) + (e & 0xFF)) > 0xFF){
             setC(1);
+        }else{
+            setC(0);
         }
 
-        SP += e;
+        uint16_t result = SP + e;
         tick();
         
-        H = getFirstByte(SP);
-        L = getSecondByte(SP);
+        H = getFirstByte(result);
+        L = getSecondByte(result);
         break;
     }
     case 0xF9:
@@ -1439,7 +1452,7 @@ void Cpu::step(){
                 E = slrR8(E);
                 break;
             case 0x3C:
-                H = slrR8(L);
+                H = slrR8(H);
                 break;
             case 0x3D:
                 L = slrR8(L);
@@ -1671,436 +1684,454 @@ void Cpu::step(){
                 bitU3(7,A);
                 break;
             case 0x80:
-                resU3(0,B);
+                B = resU3(0,B);
                 break;
             case 0x81:
-                resU3(0,C);
+                C = resU3(0,C);
                 break;
             case 0x82:
-                resU3(0,D);
+                D = resU3(0,D);
                 break;
             case 0x83:
-                resU3(0,E);
+                E = resU3(0,E);
                 break;
             case 0x84:
-                resU3(0,H);
+                H = resU3(0,H);
                 break;
             case 0x85:
-                resU3(0,L);
+                L = resU3(0,L);
                 break;
             case 0x86:
             {
                 uint8_t data = _memory->read(setTo16(H,L));
-                resU3(0,data);
+                data = resU3(0,data);
+                _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0x87:
-                resU3(0,A);
+                A =resU3(0,A);
                 break;
             case 0x88:
-                resU3(1,B);
+                B =resU3(1,B);
                 break;
             case 0x89:
-                resU3(1,C);
+                C = resU3(1,C);
                 break;
             case 0x8A:
-                resU3(1,D);
+                D = resU3(1,D);
                 break;
             case 0x8B:
-                resU3(1,E);
+                E =resU3(1,E);
                 break;
             case 0x8C:
-                resU3(1,H);
+                H =resU3(1,H);
                 break;
             case 0x8D:
-                resU3(1,L);
+                L = resU3(1,L);
                 break;
             case 0x8E:
             {
                 uint8_t data = _memory->read(setTo16(H,L));
-                resU3(1,data);
+                data =resU3(1,data);
+                _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0x8F:
-                resU3(1,A);
+                A = resU3(1,A);
                 break;
             case 0x90:
-                resU3(2,B);
+                B =resU3(2,B);
                 break;
             case 0x91:
-                resU3(2,C);
+                C = resU3(2,C);
                 break;
             case 0x92:
-                resU3(2,D);
+                D = resU3(2,D);
                 break;
             case 0x93:
-                resU3(2,E);
+                E = resU3(2,E);
                 break;
             case 0x94:
-                resU3(2,H);
+                H = resU3(2,H);
                 break;
             case 0x95:
-                resU3(2,L);
+                L = resU3(2,L);
                 break;
             case 0x96:
             {
                 uint8_t data = _memory->read(setTo16(H,L));
-                resU3(2,data);
+                data = resU3(2,data);
+                _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0x97:
-                resU3(2,A);
+                A = resU3(2,A);
                 break;
             case 0x98:
-                resU3(3,B);
+                B = resU3(3,B);
                 break;
             case 0x99:
-                resU3(3,C);
+                C = resU3(3,C);
                 break;
             case 0x9A:
-                resU3(3,D);
+                D = resU3(3,D);
                 break;
             case 0x9B:
-                resU3(3,E);
+                E =resU3(3,E);
                 break;
             case 0x9C:
-                resU3(3,H);
+                H = resU3(3,H);
                 break;
             case 0x9D:
-                resU3(3,L);
+                L = resU3(3,L);
                 break;
             case 0x9E:
             {
                 uint8_t data = _memory->read(setTo16(H,L));
-                resU3(3,data);
+                data = resU3(3,data);
+                _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0x9F:
-                resU3(3,A);
+                A= resU3(3,A);
                 break;
             case 0xA0:
-                resU3(4,B);
+                B = resU3(4,B);
                 break;
             case 0xA1:
-                resU3(4,C);
+                C = resU3(4,C);
                 break;
             case 0xA2:
-                resU3(4,D);
+                D = resU3(4,D);
                 break;
             case 0xA3:
-                resU3(4,E);
+                E =resU3(4,E);
                 break;
             case 0xA4:
-                resU3(4,H);
+                H = resU3(4,H);
                 break;
             case 0xA5:
-                resU3(4,L);
+                L = resU3(4,L);
                 break;
             case 0xA6:
             {
                 uint8_t data = _memory->read(setTo16(H,L));
-                resU3(4,data);
+                data = resU3(4,data);
+                _memory->write(setTo16(H,L),data);
                 break;
+
             }
             case 0xA7:
-                resU3(4,A);
+                A = resU3(4,A);
                 break;
             case 0xA8:
-                resU3(5,B);
+                B = resU3(5,B);
                 break;
             case 0xA9:
-                resU3(5,C);
+                C = resU3(5,C);
                 break;
             case 0xAA:
-                resU3(5,D);
+                D = resU3(5,D);
                 break;
             case 0xAB:
-                resU3(5,E);
+                E = resU3(5,E);
                 break;
             case 0xAC:
-                resU3(5,H);
+                H = resU3(5,H);
                 break;
             case 0xAD:
-                resU3(5,L);
+                L = resU3(5,L);
                 break;
             case 0xAE:
             {
                 uint8_t data = _memory->read(setTo16(H,L));
-                resU3(5,data);
+                data =resU3(5,data);
+                _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0xAF:
-                resU3(5,A);
+                A = resU3(5,A);
                 break;
             case 0xB0:
-                resU3(6,B);
+                B = resU3(6,B);
                 break;
             case 0xB1:
-                resU3(6,C);
+                C = resU3(6,C);
                 break;
             case 0xB2:
-                resU3(6,D);
+                D = resU3(6,D);
                 break;
             case 0xB3:
-                resU3(6,E);
+                E = resU3(6,E);
                 break;
             case 0xB4:
-                resU3(6,H);
+                H =resU3(6,H);
                 break;
             case 0xB5:
-                resU3(6,L);
+                L = resU3(6,L);
                 break;
             case 0xB6:
             {
                 uint8_t data = _memory->read(setTo16(H,L));
-                resU3(6,data);
+                data = resU3(6,data);
+                _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0xB7:
-                resU3(6,A);
+                A = resU3(6,A);
                 break;
             case 0xB8:
-                resU3(7,B);
+                B = resU3(7,B);
                 break;
             case 0xB9:
-                resU3(7,C);
+                C = resU3(7,C);
                 break;
             case 0xBA:
-                resU3(7,D);
+                D = resU3(7,D);
                 break;
             case 0xBB:
-                resU3(7,E);
+                E = resU3(7,E);
                 break;
             case 0xBC:
-                resU3(7,H);
+                H = resU3(7,H);
                 break;
             case 0xBD:
-                resU3(7,L);
+                L = resU3(7,L);
                 break;
             case 0xBE:
             {
                 uint8_t data = _memory->read(setTo16(H,L));
-                resU3(7,data);
+                data = resU3(7,data);
+                _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0xBF:
-                resU3(7,A);
+                A = resU3(7,A);
                 break;
             case 0xC0:
-                setU3(0,B);
+                B = setU3(0,B);
                 break;
             case 0xC1:
-                setU3(0,C);
+                C = setU3(0,C);
                 break;
             case 0xC2:
-                setU3(0,D);
+                D = setU3(0,D);
                 break;
             case 0xC3:
-                setU3(0,E);
+                E = setU3(0,E);
                 break;
             case 0xC4:
-                setU3(0,H);
+                H = setU3(0,H);
                 break;
             case 0xC5:
-                setU3(0,L);
+                L =setU3(0,L);
                 break;
             case 0xC6:
             {
                 uint8_t data = _memory->read(setTo16(H,L));
-                setU3(0,data);
+                data = setU3(0,data);
+                _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0xC7:
-                setU3(0,A);
+                A = setU3(0,A);
                 break;
             case 0xC8:
-                setU3(1,B);
+                B = setU3(1,B);
                 break;
             case 0xC9:
-                setU3(1,C);
+                C = setU3(1,C);
                 break;
             case 0xCA:
-                setU3(1,D);
+                D = setU3(1,D);
                 break;
             case 0xCB:
-                setU3(1,E);
+               E = setU3(1,E);
                 break;
             case 0xCC:
-                setU3(1,H);
+                H =setU3(1,H);
                 break;
             case 0xCD:
-                setU3(1,L);
+                L =setU3(1,L);
                 break;
             case 0xCE:
             {
                 uint8_t data = _memory->read(setTo16(H,L));
-                setU3(1,data);
+                data = setU3(1,data);
+                _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0xCF:
-                setU3(1,A);
+                A = setU3(1,A);
                 break;
             case 0xD0:
-                setU3(2,B);
+                B = setU3(2,B);
                 break;
             case 0xD1:
-                setU3(2,C);
+                C = setU3(2,C);
                 break;
             case 0xD2:
-                setU3(2,D);
+                D = setU3(2,D);
                 break;
             case 0xD3:
-                setU3(2,E);
+                E = setU3(2,E);
                 break;
             case 0xD4:
-                setU3(2,H);
+                H = setU3(2,H);
                 break;
             case 0xD5:
-                setU3(2,L);
+                L = setU3(2,L);
                 break;
             case 0xD6:
             {
                 uint8_t data = _memory->read(setTo16(H,L));
-                setU3(2,data);
+                data =setU3(2,data);
+               _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0xD7:
-                setU3(2,A);
+                A = setU3(2,A);
                 break;
             case 0xD8:
-                setU3(3,B);
+                B = setU3(3,B);
                 break;
             case 0xD9:
-                setU3(3,C);
+                C = setU3(3,C);
                 break;
             case 0xDA:
-                setU3(3,D);
+                D = setU3(3,D);
                 break;
             case 0xDB:
-                setU3(3,E);
+                E = setU3(3,E);
                 break;
             case 0xDC:
-                setU3(3,H);
+                H = setU3(3,H);
                 break;
             case 0xDD:
-                setU3(3,L);
+                L = setU3(3,L);
                 break;
             case 0xDE:
             {
                 uint8_t data = _memory->read(setTo16(H,L));
-                setU3(3,data);
+                data = setU3(3,data);
+                _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0xDF:
-                setU3(3,A);
+                A = setU3(3,A);
                 break;
             case 0xE0:
-                setU3(4,B);
+                B = setU3(4,B);
                 break;
             case 0xE1:
-                setU3(4,C);
+                C = setU3(4,C);
                 break;
             case 0xE2:
-                setU3(4,D);
+                D = setU3(4,D);
                 break;
             case 0xE3:
-                setU3(4,E);
+                E = setU3(4,E);
                 break;
             case 0xE4:
-                setU3(4,H);
+                H = setU3(4,H);
                 break;
             case 0xE5:
-                setU3(4,L);
+                L = setU3(4,L);
                 break;
             case 0xE6:
             {
                 uint8_t data = _memory->read(setTo16(H,L));
-                setU3(4,data);
+                data= setU3(4,data);
+                _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0xE7:
-                setU3(4,A);
+                A = setU3(4,A);
                 break;
             case 0xE8:
-                setU3(5,B);
+                B = setU3(5,B);
                 break;
             case 0xE9:
-                setU3(5,C);
+                C = setU3(5,C);
                 break;
             case 0xEA:
-                setU3(5,D);
+                D = setU3(5,D);
                 break;
             case 0xEB:
-                setU3(5,E);
+                E = setU3(5,E);
                 break;
             case 0xEC:
-                setU3(5,H);
+                H = setU3(5,H);
                 break;
             case 0xED:
-                setU3(5,L);
+                L = setU3(5,L);
                 break;
             case 0xEE:
             {
                 uint8_t data = _memory->read(setTo16(H,L));
-                setU3(5,data);
+                data= setU3(5,data);
+               _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0xEF:
-                setU3(5,A);
+                A = setU3(5,A);
                 break;
             case 0xF0:
-                setU3(6,B);
+                B = setU3(6,B);
                 break;
             case 0xF1:
-                setU3(6,C);
+                C = setU3(6,C);
                 break;
             case 0xF2:
-                setU3(6,D);
+                D = setU3(6,D);
                 break;
             case 0xF3:
-                setU3(6,E);
+                E = setU3(6,E);
                 break;
             case 0xF4:
-                setU3(6,H);
+                H = setU3(6,H);
                 break;
             case 0xF5:
-                setU3(6,L);
+                L = setU3(6,L);
                 break;
             case 0xF6:
             {
                 uint8_t data = _memory->read(setTo16(H,L));
-                setU3(6,data);
+                data = setU3(6,data);
+                _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0xF7:
-                setU3(6,A);
+                A = setU3(6,A);
+
                 break;
             case 0xF8:
-                setU3(7,B);
+                B = setU3(7,B);
                 break;
             case 0xF9:
-                setU3(7,C);
+                C = setU3(7,C);
                 break;
             case 0xFA:
-                setU3(7,D);
+                D = setU3(7,D);
                 break;
             case 0xFB:
-                setU3(7,E);
+                E = setU3(7,E);
                 break;
             case 0xFC:
-                setU3(7,H);
+                H = setU3(7,H);
                 break;
             case 0xFD:
-                setU3(7,L);
+                L = setU3(7,L);
                 break;
             case 0xFE:
             {
                 uint8_t data = _memory->read(setTo16(H,L));
-                setU3(7,data);
+                data= setU3(7,data);
+                _memory->write(setTo16(H,L),data);
                 break;
             }
             case 0xFF:
-                setU3(7,A);
+                A = setU3(7,A);
                 break;
         }
         
@@ -2166,7 +2197,7 @@ uint8_t Cpu::getH(){
     return (F & 0x20) >> 5;
 }
 uint8_t Cpu::getC(){
-    return (F & 0x10) >> 7;
+    return (F & 0x10) >> 4;
 }
 
 reg8 Cpu::incrementR8(reg8 reg){
@@ -2242,7 +2273,7 @@ reg8 Cpu::addR8(reg8 regA, reg8 regB){
     }else{
         setC(0);
     }
-
+    
     return regA + regB;
 
 }
@@ -2263,13 +2294,14 @@ reg8 Cpu::adcR8(reg8 regA, reg8 regB){
         setH(0);
     }
 
+    reg8 result = regA + regB + getC();
     if(regA + regB + getC() > 0xFF){
         setC(1);
     }else{
         setC(0);
     }
 
-    return regA + regB + getC();
+    return result;
 
 }
 
@@ -2314,13 +2346,14 @@ reg8 Cpu::sbcR8(reg8 regA, reg8 regB){
         setH(0);
     }
 
+    reg8 result = regA - regB - getC();
     if((regB + getC()) > regA){
         setC(1);
     }else{
         setC(0);
     }
 
-    return regA - regB - getC();
+    return result;
 }
 
 reg8 Cpu::andR8(reg8 regA, reg8 regB){
