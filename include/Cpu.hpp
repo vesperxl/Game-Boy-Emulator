@@ -21,9 +21,11 @@ public:
     uint8_t ime_flag = 0;
     uint8_t ime_next = 0;
     Memory *_memory;
+    uint8_t is_halted = 0;
+    uint8_t halt_bug = 0;
 
     Cpu(Memory *mem);
-    void step();
+    void execute(uint8_t opcode);
     void tick();
     uint8_t fetch();
     uint16_t setTo16(uint8_t hi,uint8_t lo);
@@ -62,4 +64,7 @@ public:
     reg8 resU3(uint8_t bit, reg8 reg);
     reg8 setU3(uint8_t bit, reg8 reg);
     void reset();
+    uint8_t memory_read(uint16_t adress);
+    void memory_write(uint16_t adress, uint8_t data);
+    void handleInterrupts();
 };

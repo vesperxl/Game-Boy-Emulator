@@ -6,9 +6,7 @@
 #include"Memory.hpp"
 
 
-void Cpu::step(){
-
-    uint8_t opcode = fetch();
+void Cpu::execute(uint8_t opcode){
 
     switch (opcode & 0xFF)
     {
@@ -21,7 +19,7 @@ void Cpu::step(){
     case 0x02:
     {
         uint16_t BC = setTo16(B,C);
-        _memory->write(BC,A);
+        memory_write(BC,A);
         break;
     }
     case 0x03:
@@ -58,10 +56,10 @@ void Cpu::step(){
         uint8_t hi = fetch();
         uint16_t adress = setTo16(hi,lo);
         uint8_t data = getSecondByte(SP);
-        _memory->write(adress,data);
+        memory_write(adress,data);
         data = getFirstByte(SP);
         adress++;
-        _memory->write(adress,data);
+        memory_write(adress,data);
         break;
     }
     case 0x09:
@@ -76,7 +74,7 @@ void Cpu::step(){
         break;
     }
     case 0x0A:
-        A = _memory->read(setTo16(B,C));
+        A = memory_read(setTo16(B,C));
         break;
     case 0x0B:
     {
@@ -116,7 +114,7 @@ void Cpu::step(){
     case 0x12:
     {
         uint16_t DE = setTo16(D,E);
-        _memory->write(DE,A);
+        memory_write(DE,A);
         break;
     }
     case 0x13:
@@ -166,7 +164,7 @@ void Cpu::step(){
         break;
     }
     case 0x1A:
-        A = _memory->read(setTo16(D,E));
+        A = memory_read(setTo16(D,E));
         break;
     case 0x1B:
     {
@@ -213,7 +211,7 @@ void Cpu::step(){
     case 0x22:
     {
         reg16 HL = setTo16(H,L);
-        _memory->write(HL,A);
+        memory_write(HL,A);
         HL++;
         H = getFirstByte(HL);
         L = getSecondByte(HL);
@@ -293,7 +291,7 @@ void Cpu::step(){
     case 0x2A:
     {
         reg16 HL = setTo16(H,L);
-        A = _memory->read(HL);
+        A = memory_read(HL);
         HL++;
         H = getFirstByte(HL);
         L = getSecondByte(HL);
@@ -344,7 +342,7 @@ void Cpu::step(){
     case 0x32:
     {
         reg16 HL = setTo16(H,L);
-        _memory->write(HL,A);
+        memory_write(HL,A);
         HL--;
         H = getFirstByte(HL);
         L = getSecondByte(HL);
@@ -356,22 +354,22 @@ void Cpu::step(){
         break;
     case 0x34:
     {
-        uint8_t data = _memory->read(setTo16(H,L));
+        uint8_t data = memory_read(setTo16(H,L));
         data = incrementR8(data);
-        _memory->write(setTo16(H,L),data);
+        memory_write(setTo16(H,L),data);
         break;
     }
     case 0x35:
     {
-        uint8_t data = _memory->read(setTo16(H,L));
+        uint8_t data = memory_read(setTo16(H,L));
         data= decrementR8(data);
-        _memory->write(setTo16(H,L),data);
+        memory_write(setTo16(H,L),data);
         break;
     }
     case 0x36:
     {
         uint8_t data = fetch();
-        _memory->write(setTo16(H,L),data);
+        memory_write(setTo16(H,L),data);
         break;
     }
     case 0x37:
@@ -400,7 +398,7 @@ void Cpu::step(){
     case 0x3A:
     {
         reg16 HL = setTo16(H,L);
-        A = _memory->read(HL);
+        A = memory_read(HL);
         HL--;
         H = getFirstByte(HL);
         L = getSecondByte(HL);
@@ -447,7 +445,7 @@ void Cpu::step(){
         B = L;
         break;
     case 0x46:
-        B = _memory->read(setTo16(H,L));
+        B = memory_read(setTo16(H,L));
         break;
     case 0x47:
         B = A;
@@ -471,7 +469,7 @@ void Cpu::step(){
         C = L;
         break;
     case 0x4E:
-        C = _memory->read(setTo16(H,L));
+        C = memory_read(setTo16(H,L));
         break;
     case 0x4F:
         C = A;
@@ -495,7 +493,7 @@ void Cpu::step(){
         D = L;
         break;
     case 0x56:
-        D = _memory->read(setTo16(H,L));
+        D = memory_read(setTo16(H,L));
         break;
     case 0x57:
         D = A;
@@ -519,7 +517,7 @@ void Cpu::step(){
         E = L;
         break;
     case 0x5E:
-        E = _memory->read(setTo16(H,L));
+        E = memory_read(setTo16(H,L));
         break;
     case 0x5F:
         E = A;
@@ -543,7 +541,7 @@ void Cpu::step(){
         H = L;
         break;
     case 0x66:
-        H = _memory->read(setTo16(H,L));
+        H = memory_read(setTo16(H,L));
         break;
     case 0x67:
         H = A;
@@ -567,28 +565,28 @@ void Cpu::step(){
         //L = L;
         break;
     case 0x6E:
-        L = _memory->read(setTo16(H,L));
+        L = memory_read(setTo16(H,L));
         break;
     case 0x6F:
         L = A;
         break;
     case 0x70:
-        _memory->write(setTo16(H,L), B);
+        memory_write(setTo16(H,L), B);
         break;
     case 0x71:
-        _memory->write(setTo16(H,L), C);
+        memory_write(setTo16(H,L), C);
         break;
     case 0x72:
-        _memory->write(setTo16(H,L), D);
+        memory_write(setTo16(H,L), D);
         break;
     case 0x73:
-        _memory->write(setTo16(H,L), E);
+        memory_write(setTo16(H,L), E);
         break;
     case 0x74:
-        _memory->write(setTo16(H,L), H);
+        memory_write(setTo16(H,L), H);
         break;
     case 0x75:
-        _memory->write(setTo16(H,L), L);
+        memory_write(setTo16(H,L), L);
         break;
     case 0x76:
         //TODO
@@ -600,9 +598,29 @@ void Cpu::step(){
         //TODO
         //TODO
         //TODO 
+        if(ime_flag){
+            is_halted = 0;
+            handleInterrupts();
+        }
+        else{
+            if(!(_memory->IE() & _memory->IF())){
+                is_halted = 1;
+            }else{
+                if(is_halted){
+                    is_halted = 0;
+                    handleInterrupts();
+                }else{//halt bug
+                    halt_bug = 1;   
+                }
+            }
+        }
+
+
+
+
         break;
     case 0x77:
-        _memory->write(setTo16(H,L), A);
+        memory_write(setTo16(H,L), A);
         break;
     case 0x78:  
         A = B;
@@ -623,7 +641,7 @@ void Cpu::step(){
         A = L;
         break;
     case 0x7E:
-        A = _memory->read(setTo16(H,L));
+        A = memory_read(setTo16(H,L));
         break;
     case 0x7F:
         //A = A; 
@@ -648,7 +666,7 @@ void Cpu::step(){
         break;
     case 0x86:
     {
-        uint8_t data = _memory->read(setTo16(H,L));
+        uint8_t data = memory_read(setTo16(H,L));
         A = addR8(A,data);
         break;
     }
@@ -675,7 +693,7 @@ void Cpu::step(){
         break;
     case 0x8E:
     {
-        uint8_t data = _memory->read(setTo16(H,L));
+        uint8_t data = memory_read(setTo16(H,L));
         A = adcR8(A,data);
                 break;
     }
@@ -702,7 +720,7 @@ void Cpu::step(){
         break;
     case 0x96:
     {
-        uint8_t data = _memory->read(setTo16(H,L));
+        uint8_t data = memory_read(setTo16(H,L));
         A = subR8(A,data);
         break;
     }
@@ -729,7 +747,7 @@ void Cpu::step(){
         break;
     case 0x9E:
     {
-        uint8_t data = _memory->read(setTo16(H,L));
+        uint8_t data = memory_read(setTo16(H,L));
         A = sbcR8(A,data);
         break;
     }
@@ -756,7 +774,7 @@ void Cpu::step(){
         break;
     case 0xA6:
     {
-        uint8_t data = _memory->read(setTo16(H,L));
+        uint8_t data = memory_read(setTo16(H,L));
         A = andR8(A,data);
         break;
     }
@@ -783,7 +801,7 @@ void Cpu::step(){
         break;
     case 0xAE:
     {
-        uint8_t data = _memory->read(setTo16(H,L));
+        uint8_t data = memory_read(setTo16(H,L));
         A = xorR8(A,data);
         break;
     }
@@ -810,7 +828,7 @@ void Cpu::step(){
         break;
     case 0xB6:
     {
-        uint8_t data = _memory->read(setTo16(H,L));
+        uint8_t data = memory_read(setTo16(H,L));
         A = orR8(A,data);
         break;
     }
@@ -837,7 +855,7 @@ void Cpu::step(){
         break;
     case 0xBE:
     {
-        uint8_t data = _memory->read(setTo16(H,L));
+        uint8_t data = memory_read(setTo16(H,L));
         subR8(A,data);
         break;
     }
@@ -1078,7 +1096,7 @@ void Cpu::step(){
     {
         uint8_t lo = fetch();
         uint16_t adress = setTo16(0xFF, lo);
-        _memory->write(adress,A);
+        memory_write(adress,A);
         break;
     }
     case 0xE1:
@@ -1091,7 +1109,7 @@ void Cpu::step(){
     case 0xE2:
     {
         uint16_t adress = setTo16(0xFF,C);
-        _memory->write(adress,A);
+        memory_write(adress,A);
         break;
     }
     case 0xE5:  
@@ -1140,7 +1158,7 @@ void Cpu::step(){
         uint8_t lo = fetch();
         uint8_t hi = fetch();
         uint16_t adress = setTo16(hi,lo);
-        _memory->write(adress,A);
+        memory_write(adress,A);
         break;
     }
     case 0xEE:
@@ -1156,7 +1174,7 @@ void Cpu::step(){
     {
         uint8_t lo = fetch();
         uint16_t adress = setTo16(0xFF,lo);
-        A = _memory->read(adress);
+        A = memory_read(adress);
         break;
     }
     case 0xF1:
@@ -1169,7 +1187,7 @@ void Cpu::step(){
     case 0xF2:
     {
         uint16_t adress = setTo16(0xFF,C);
-        A = _memory->read(adress);
+        A = memory_read(adress);
         break;
     }
     case 0xF3:
@@ -1224,7 +1242,7 @@ void Cpu::step(){
         uint8_t lo = fetch();
         uint8_t hi= fetch();
         uint16_t adress = setTo16(hi,lo);
-        A = _memory->read(adress);
+        A = memory_read(adress);
         break;
     }
     case 0xFB:
@@ -1263,9 +1281,9 @@ void Cpu::step(){
                 break;
             case 0x06:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data = rlcR8(data);
-                _memory->write(setTo16(H,L),data);
+                memory_write(setTo16(H,L),data);
                 break;
             }
             case 0x07:
@@ -1291,9 +1309,9 @@ void Cpu::step(){
                 break;
             case 0x0E:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data = rrcR8(data);
-                _memory->write(setTo16(H,L), data);
+                memory_write(setTo16(H,L), data);
                 break;
             }
             case 0x0F:
@@ -1319,9 +1337,9 @@ void Cpu::step(){
                 break;
             case 0x16:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data = rlR8(data);
-                _memory->write(setTo16(H,L), data);
+                memory_write(setTo16(H,L), data);
                 break;
             }
             case 0x17:
@@ -1347,9 +1365,9 @@ void Cpu::step(){
                 break;
             case 0x1E:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data = rrR8(data);
-                _memory->write(setTo16(H,L),data);
+                memory_write(setTo16(H,L),data);
                 break;
             }
             case 0x1F:
@@ -1375,9 +1393,9 @@ void Cpu::step(){
                 break;
             case 0x26:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data = slaR8(data);
-                _memory->write(setTo16(H,L),data);
+                memory_write(setTo16(H,L),data);
                 break;
             }
             case 0x27:  
@@ -1403,9 +1421,9 @@ void Cpu::step(){
                 break;
             case 0x2E:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data = sraR8(data);
-                _memory->write(setTo16(H,L),data);
+                memory_write(setTo16(H,L),data);
                 break;
             }
             case 0x2F:
@@ -1431,9 +1449,9 @@ void Cpu::step(){
                 break;
             case 0x36:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data = swapR8(data);
-                _memory->write(setTo16(H,L),data);
+                memory_write(setTo16(H,L),data);
                 break;
             }
             case 0x37:
@@ -1459,9 +1477,9 @@ void Cpu::step(){
                 break;
             case 0x3E:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data = slrR8(data);
-                _memory->write(setTo16(H,L),data);
+                memory_write(setTo16(H,L),data);
                 break;
             }
             case 0x3F:
@@ -1487,7 +1505,7 @@ void Cpu::step(){
                 break;
             case 0x46:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 bitU3(0,data);
                 break;
             }
@@ -1514,7 +1532,7 @@ void Cpu::step(){
                 break;
             case 0x4E:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 bitU3(1,data);
                 break;
             }
@@ -1541,7 +1559,7 @@ void Cpu::step(){
                 break;
             case 0x56:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 bitU3(2,data);
                 break;
             }
@@ -1568,7 +1586,7 @@ void Cpu::step(){
                 break;
             case 0x5E:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 bitU3(3,data);
                 break;
             }
@@ -1595,7 +1613,7 @@ void Cpu::step(){
                 break;
             case 0x66:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 bitU3(4,data);
                 break;
             }
@@ -1622,7 +1640,7 @@ void Cpu::step(){
                 break;
             case 0x6E:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 bitU3(5,data);
                 break;
             }
@@ -1649,7 +1667,7 @@ void Cpu::step(){
                 break;
             case 0x76:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 bitU3(6,data);
                 break;
             }
@@ -1676,7 +1694,7 @@ void Cpu::step(){
                 break;
             case 0x7E:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 bitU3(7,data);
                 break;
             }
@@ -1703,9 +1721,9 @@ void Cpu::step(){
                 break;
             case 0x86:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data = resU3(0,data);
-                _memory->write(setTo16(H,L),data);
+                memory_write(setTo16(H,L),data);
                 break;
             }
             case 0x87:
@@ -1731,9 +1749,9 @@ void Cpu::step(){
                 break;
             case 0x8E:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data =resU3(1,data);
-                _memory->write(setTo16(H,L),data);
+                memory_write(setTo16(H,L),data);
                 break;
             }
             case 0x8F:
@@ -1759,9 +1777,9 @@ void Cpu::step(){
                 break;
             case 0x96:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data = resU3(2,data);
-                _memory->write(setTo16(H,L),data);
+                memory_write(setTo16(H,L),data);
                 break;
             }
             case 0x97:
@@ -1787,9 +1805,9 @@ void Cpu::step(){
                 break;
             case 0x9E:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data = resU3(3,data);
-                _memory->write(setTo16(H,L),data);
+                memory_write(setTo16(H,L),data);
                 break;
             }
             case 0x9F:
@@ -1815,9 +1833,9 @@ void Cpu::step(){
                 break;
             case 0xA6:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data = resU3(4,data);
-                _memory->write(setTo16(H,L),data);
+                memory_write(setTo16(H,L),data);
                 break;
 
             }
@@ -1844,9 +1862,9 @@ void Cpu::step(){
                 break;
             case 0xAE:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data =resU3(5,data);
-                _memory->write(setTo16(H,L),data);
+                memory_write(setTo16(H,L),data);
                 break;
             }
             case 0xAF:
@@ -1872,9 +1890,9 @@ void Cpu::step(){
                 break;
             case 0xB6:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data = resU3(6,data);
-                _memory->write(setTo16(H,L),data);
+                memory_write(setTo16(H,L),data);
                 break;
             }
             case 0xB7:
@@ -1900,9 +1918,9 @@ void Cpu::step(){
                 break;
             case 0xBE:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data = resU3(7,data);
-                _memory->write(setTo16(H,L),data);
+                memory_write(setTo16(H,L),data);
                 break;
             }
             case 0xBF:
@@ -1928,9 +1946,9 @@ void Cpu::step(){
                 break;
             case 0xC6:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data = setU3(0,data);
-                _memory->write(setTo16(H,L),data);
+                memory_write(setTo16(H,L),data);
                 break;
             }
             case 0xC7:
@@ -1956,9 +1974,9 @@ void Cpu::step(){
                 break;
             case 0xCE:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data = setU3(1,data);
-                _memory->write(setTo16(H,L),data);
+                memory_write(setTo16(H,L),data);
                 break;
             }
             case 0xCF:
@@ -1984,9 +2002,9 @@ void Cpu::step(){
                 break;
             case 0xD6:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data =setU3(2,data);
-               _memory->write(setTo16(H,L),data);
+               memory_write(setTo16(H,L),data);
                 break;
             }
             case 0xD7:
@@ -2012,9 +2030,9 @@ void Cpu::step(){
                 break;
             case 0xDE:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data = setU3(3,data);
-                _memory->write(setTo16(H,L),data);
+                memory_write(setTo16(H,L),data);
                 break;
             }
             case 0xDF:
@@ -2040,9 +2058,9 @@ void Cpu::step(){
                 break;
             case 0xE6:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data= setU3(4,data);
-                _memory->write(setTo16(H,L),data);
+                memory_write(setTo16(H,L),data);
                 break;
             }
             case 0xE7:
@@ -2068,9 +2086,9 @@ void Cpu::step(){
                 break;
             case 0xEE:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data= setU3(5,data);
-               _memory->write(setTo16(H,L),data);
+               memory_write(setTo16(H,L),data);
                 break;
             }
             case 0xEF:
@@ -2096,9 +2114,9 @@ void Cpu::step(){
                 break;
             case 0xF6:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data = setU3(6,data);
-                _memory->write(setTo16(H,L),data);
+                memory_write(setTo16(H,L),data);
                 break;
             }
             case 0xF7:
@@ -2125,9 +2143,9 @@ void Cpu::step(){
                 break;
             case 0xFE:
             {
-                uint8_t data = _memory->read(setTo16(H,L));
+                uint8_t data = memory_read(setTo16(H,L));
                 data= setU3(7,data);
-                _memory->write(setTo16(H,L),data);
+                memory_write(setTo16(H,L),data);
                 break;
             }
             case 0xFF:
@@ -2150,7 +2168,7 @@ Cpu::Cpu(Memory *mem) : _memory(mem){
 
 uint8_t Cpu::fetch(){
     
-    uint8_t data = _memory->read(PC);
+    uint8_t data = memory_read(PC);
     PC++;
     return data;
 }
@@ -2399,9 +2417,9 @@ reg8 Cpu::orR8(reg8 regA, reg8 regB){
 }
 
 reg16 Cpu::popR16(){
-    uint8_t lo = _memory->read(SP);
+    uint8_t lo = memory_read(SP);
     SP++;
-    uint8_t hi = _memory->read(SP);
+    uint8_t hi = memory_read(SP);
     SP++;
 
     return setTo16(hi,lo);
@@ -2409,9 +2427,9 @@ reg16 Cpu::popR16(){
 
 void Cpu::pushR16(reg8 hi, reg8 lo){
     SP--;
-    _memory->write(SP,hi);
+    memory_write(SP,hi);
     SP--;
-    _memory->write(SP,lo);
+    memory_write(SP,lo);
 }
 
 void Cpu::rst(uint16_t vector){
@@ -2589,3 +2607,39 @@ void Cpu::reset(){
     ime_next = 0;
 }
 
+uint8_t Cpu::memory_read(uint16_t adress){
+    tick();
+    return _memory->read(adress);
+}
+
+void Cpu::memory_write(uint16_t adress, uint8_t data){
+    tick();
+    _memory->write(adress,data);
+}
+
+
+
+void Cpu::handleInterrupts(){  
+    
+    if(ime_flag){
+        if(_memory->IE() & _memory->IF()){
+            for(uint8_t i = 0; i <5;i++){
+                if((_memory->IE() & (1 << i)) & (_memory->IF() & (1 << i))){
+                        ime_flag = 0;
+                        uint8_t new_bits = _memory->IF() & (~(1<<i));
+                            _memory->write(0xFF0F,new_bits);
+
+                            tick();
+                            tick();
+
+                            uint8_t hiPC = getFirstByte(PC);
+                            uint8_t loPC = getSecondByte(PC);
+                            pushR16(hiPC,loPC);   
+                            PC = 0x40 + (i*0x08);
+                            tick();
+
+                }
+            }
+        }
+    }
+}

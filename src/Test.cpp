@@ -40,7 +40,7 @@ uint8_t Test::runSingleTest(uint8_t i, const json& jsonFile){
         _memory->write(a[0], a[1]);
     }
 
-    _cpu.step();
+    _cpu.execute(_cpu.fetch());
 
     if(_cpu.PC != data["final"]["pc"]){ return 1;}
     if(_cpu.SP != data["final"]["sp"]){ return 1;}
@@ -142,7 +142,8 @@ void Test::runDetailedSingleTest(uint8_t i, const json& jsonFile){
 
     std::cout << "\n";  
 
-    _cpu.step();
+    _cpu.execute(_cpu.fetch());
+
 
     if(_cpu.PC != data["final"]["pc"]){ std::cout << "PC WRONG, ACTUAL : " << _cpu.PC << ", EXPECTED : " << data["final"]["pc"] << "\n"; }
     else{ std::cout << "PC RIGHT : " << _cpu.PC << "\n";}
