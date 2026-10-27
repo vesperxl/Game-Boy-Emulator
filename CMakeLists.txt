@@ -16,6 +16,7 @@ add_executable(${PROJECT_NAME}
     src/Cpu.cpp
     src/Memory.cpp
     src/Test.cpp
+    src/Timers.cpp
 )
 
 

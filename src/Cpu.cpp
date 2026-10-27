@@ -589,15 +589,7 @@ void Cpu::execute(uint8_t opcode){
         memory_write(setTo16(H,L), L);
         break;
     case 0x76:
-        //TODO
-        //TODO
-        //TODO
-        //TODO
-        //TODO
-        //TODO
-        //TODO
-        //TODO
-        //TODO 
+        
         if(ime_flag){
             is_halted = 0;
             handleInterrupts();
