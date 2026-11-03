@@ -5,11 +5,14 @@
 #include <string>
 #include <sys/stat.h>
 #include <filesystem>
+#include "Timers.hpp"
+#include "Cpu.hpp"
 
 
 Test::Test() 
-    : _memory(std::make_unique<Memory>()),
-     _cpu(_memory.get()) 
+    :   _memory(std::make_unique<Memory>()),
+        _timers(_memory.get()),
+        _cpu(_memory.get(), &_timers) 
     {   
         
     }

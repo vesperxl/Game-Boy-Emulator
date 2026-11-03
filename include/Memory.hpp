@@ -23,6 +23,8 @@ public:
     void setDIV(uint8_t value);
     void setTIMA(uint8_t value);
     void setTMA(uint8_t value);
+    uint8_t LY();
+    uint8_t LCDC();
 
 
 

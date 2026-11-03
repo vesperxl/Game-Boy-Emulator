@@ -44,3 +44,7 @@ void Memory::setTIMA(uint8_t value){
 void Memory::setTMA(uint8_t value){
     _memoryBank[0xFF06] = value;
 }
+
+uint8_t Memory::LY(){
+    return _memoryBank[0xFF44];
+}

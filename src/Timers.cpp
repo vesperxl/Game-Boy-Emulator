@@ -1,5 +1,6 @@
 #include "Timers.hpp"
 #include "Memory.hpp"
+#include<cstdint>
 
 
 Timers::Timers(Memory* mem) : _memory(mem){
@@ -21,7 +22,7 @@ void Timers::incrementTimers(){
 void Timers::incrementTIMA(){
     if(overflow == 0){
         if(fallingEdge()){
-            if(_memory->TIMA() == 0xFF){
+            if(_memory->TIMA() >= 0xFF){
             _memory->setTIMA(0);
             overflow = 1;
             }else{

@@ -1,6 +1,7 @@
 #pragma once
 #include<cstdint>
 #include "Memory.hpp"
+#include "Timers.hpp"
 
 using reg8 = uint8_t;
 using reg16 = uint16_t;
@@ -10,23 +11,23 @@ class Cpu{
 public:
     reg8 A = 0x01;
     reg8 F = 0b0000;
-    reg8 B = 0xFF;
+    reg8 B = 0x00;
     reg8 C = 0x13;
     reg8 D = 0x00;
-    reg8 E = 0xC1;
-    reg8 H = 0x84;
-    reg8 L = 0x03;
+    reg8 E = 0xD8;
+    reg8 H = 0x01;
+    reg8 L = 0x4D;
     reg16 PC = 0x100;
     reg16 SP = 0xFFFE;
     uint8_t ime_flag = 0;
     uint8_t ime_next = 0;
     Memory *_memory;
+    Timers *_timers;
     uint8_t is_halted = 0;
     uint8_t halt_bug = 0;
 
-    Cpu(Memory *mem);
+    Cpu(Memory *mem, Timers *timers);
     void execute(uint8_t opcode);
-    void tick();
     uint8_t fetch();
     uint16_t setTo16(uint8_t hi,uint8_t lo);
     uint8_t getFirstByte(reg16 reg);
@@ -67,4 +68,5 @@ public:
     uint8_t memory_read(uint16_t adress);
     void memory_write(uint16_t adress, uint8_t data);
     void handleInterrupts();
+    void tick();
 };

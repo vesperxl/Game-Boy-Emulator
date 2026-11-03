@@ -4,6 +4,7 @@
 
 #include "Cpu.hpp"
 #include"Memory.hpp"
+#include"Timers.hpp"
 
 
 void Cpu::execute(uint8_t opcode){
@@ -2154,7 +2155,7 @@ void Cpu::execute(uint8_t opcode){
 
 }
 
-Cpu::Cpu(Memory *mem) : _memory(mem){
+Cpu::Cpu(Memory *mem, Timers *timers) : _memory(mem), _timers(timers){
    
 }
 
@@ -2580,9 +2581,6 @@ reg8 Cpu::setU3(uint8_t bit, reg8 reg){
     reg = (reg | (1<<bit));
     return reg; 
 }
-void Cpu::tick(){
-
-}
 
 void Cpu::reset(){
     A = 0x01;
@@ -2600,16 +2598,16 @@ void Cpu::reset(){
 }
 
 uint8_t Cpu::memory_read(uint16_t adress){
+    uint8_t data = _memory->read(adress);
     tick();
-    return _memory->read(adress);
+    return data;
 }
 
 void Cpu::memory_write(uint16_t adress, uint8_t data){
-    tick();
     _memory->write(adress,data);
+    tick();
+
 }
-
-
 
 void Cpu::handleInterrupts(){  
     
@@ -2634,4 +2632,8 @@ void Cpu::handleInterrupts(){
             }
         }
     }
+}
+
+void Cpu::tick(){
+    _timers->tick();
 }

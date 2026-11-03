@@ -4,7 +4,8 @@
 #include "Memory.hpp"
 #include "Cpu.hpp"
 #include <iostream>
-
+#include "Timers.hpp"
+#include "Cpu.hpp"
 using json = nlohmann::json;
 
 
@@ -12,6 +13,7 @@ class Test{
     
     private:
         std::unique_ptr<Memory> _memory;
+        Timers _timers;
         Cpu _cpu;
 
     public:
