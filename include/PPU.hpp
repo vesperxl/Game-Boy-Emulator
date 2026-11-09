@@ -14,7 +14,19 @@ struct fifoPixel{
 class PPU{
     private:
         uint8_t x_pos_counter;
-        std::queue<fifoPixel> sprite_fifo;
+        uint8_t x_pos_fetcher_counter;
+        uint8_t window_rendering = 0;
+        uint16_t offset;
+        uint16_t tilemap;
+        uint8_t window_line_counter;
+        uint8_t window_in_scanline;
+        uint8_t low_tile_data;
+        uint8_t high_tile_data;
+        uint8_t tile_num;
+        uint16_t tile_adress;
+        uint32_t curr_sprite;
+        uint8_t v = 1;
+        std::deque<fifoPixel> sprite_fifo;
         std::queue<fifoPixel> bg_fifo;
         Memory *_memory;
         uint16_t getColor(uint8_t palette,uint8_t color_id);
@@ -25,6 +37,13 @@ class PPU{
         uint8_t getByte1(uint32_t data);
         uint8_t getByte2(uint32_t data);
         uint8_t getByte3(uint32_t data);
+        uint16_t bg_dots_counter = 0;
+        uint16_t sprite_dots_counter = 0;
+        uint8_t first_time = 1;
+        void bgPixelFetch();
+        void spriteFetch();
+        uint8_t vertical_flip = 0;
+        fifoPixel decodeTileData(uint8_t hi, uint8_t lo, uint8_t i, fifoPixel *px);
     public:
         std::array<std::array<uint16_t,144>,160> displayArray;
         PPU(Memory *mem); 

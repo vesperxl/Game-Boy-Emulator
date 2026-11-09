@@ -25,6 +25,8 @@ public:
     void setTMA(uint8_t value);
     uint8_t LY();
     uint8_t LCDC();
+    uint8_t SCX();
+    uint8_t SCY();
 
 
 

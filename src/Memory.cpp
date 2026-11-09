@@ -48,3 +48,14 @@ void Memory::setTMA(uint8_t value){
 uint8_t Memory::LY(){
     return _memoryBank[0xFF44];
 }
+
+uint8_t Memory::LCDC(){
+    return _memoryBank[0xFF40];
+}
+
+uint8_t Memory::SCX(){
+    return _memoryBank[0xFF43];
+}
+uint8_t Memory::SCY(){
+    return _memoryBank[0xFF42];
+}
