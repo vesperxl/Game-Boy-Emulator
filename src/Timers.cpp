@@ -33,7 +33,7 @@ void Timers::incrementTIMA(){
 
     }else{
         _memory->setTIMA(_memory->TMA());
-        _memory->write(0xFF0F,(_memory->IF() | 2));
+        _memory->write(0xFF0F,(_memory->IF() | 4));
         overflow = 0;
     }
     

@@ -59,3 +59,7 @@ uint8_t Memory::SCX(){
 uint8_t Memory::SCY(){
     return _memoryBank[0xFF42];
 }
+
+uint8_t Memory::STAT(){
+    return _memoryBank[0xFF41];
+}

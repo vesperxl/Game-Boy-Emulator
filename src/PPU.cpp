@@ -58,9 +58,7 @@ uint16_t PPU::getColor(uint8_t palette, uint8_t color_id){
 }
 
 
-void PPU::step(){
-    dots++;
-}
+
 
 void PPU::oam_scan(){   
     if(dots % 2 != 1){
@@ -201,26 +199,164 @@ void PPU::spriteFetch(){
         }       
     }
 
-    if(sprite_dots_counter != 6){
+    if(sprite_dots_counter < 6){
         sprite_dots_counter++;
     }else{
         sprite_dots_counter = 0;
+        sprite_in_progress = 0;
     }
 }
 
 
 
 
+void PPU::step(){
+     if(new_scanline){//COINCIDENCE FLAG
+            if(_memory->LY() == _memory->read(0xFF45)){
+                _memory->write(0xFF41,_memory->read(0xFF41) | 1);
+            }else{
+                _memory->write(0xFF41,_memory->read(0xFF41) & 0);
+            }
+            new_scanline = 0;
+     }
 
 
-//put window in scanline to 0 every new scanline;
-//first time to 0 every new scanline
-//reset window line counter when V BLANK
-//load curr_sprite in the loop
-//verif on new sprite to display right after sprite fetch & before shifting out fifo pixel to the lcd
+    if(_memory->LY() < 144){
+         if(dots <= 80){// MODE 2 : OAM SCAN
+           
+                if(first_oam)
+                {
+                    if(((_memory->read(0xFF41) >> 5) & 1) == 1 && !ly_lyc_condition && !mode_condition){//stat interrupt 
+                        _memory->write(0xFF0F,_memory->IF() | 2);
+                         mode_condition = 1;
+                    }
+
+                    uint8_t stat = _memory->STAT() & 0xFC;
+                    stat = stat | 2;
+                    _memory->write(0xFF41,stat);//update stat on MODE 2
+                } else{
+                    mode_condition = 0;
+                }
+             
+            oam_scan();
+        }else{
+            if(x_pos_counter < 160 ){//drawing mode : MODE 3
+
+                uint8_t stat = _memory->STAT() & 0xFC;
+                stat = stat | 3;
+                _memory->write(0xFF41,stat);//update stat on MODE 3
+                if(!sprite_in_progress){
+                    bgPixelFetch();
+                    verifSprite();
+                }else{
+                    spriteFetch();
+                }
+                    
+                if(!sprite_in_progress){
+                    verifSprite;
+                }
+
+                if(!sprite_in_progress){
+                    pushPixel();
+                    if((_memory->LCDC() >> 5) & 1 == 1 && wy_ly == 1 && x_pos_counter >= _memory->read(0xFF4B) - 7){
+                        window_rendering = 1;
+                    }else{
+                        window_rendering = 0;
+
+                    }
+                }
+
+
+            }else{//mode 0 h blank
+                if(first_hblank){
+                    if(((_memory->read(0xFF41) >> 3) & 1) == 1 && !ly_lyc_condition && !mode_condition){//stat interrupt 
+                        _memory->write(0xFF0F,_memory->IF() | 2);
+                        mode_condition = 1;
+                    }
+
+
+                    uint8_t stat = _memory->STAT() & 0xFC;
+                    stat = stat | 0;
+                    _memory->write(0xFF41,stat);//update stat on MODE 0
+
+                    first_hblank = 0;
+                }else{
+                    mode_condition = 0;
+
+                }
+
+                if(dots >= 456){ //End of scanline
+                    _memory->write(0xFF44,_memory->LY() + 1);
+                    dots = 0;
+                    window_in_scanline = 0;
+                    first_time =0;
+                    x_pos_counter = 0;
+                    new_scanline = 1;
+                }
+            }
+
+        }
+
+    }else{// V - BLANK
+        if(first_vblank){
+            if(((_memory->read(0xFF41) >> 4) & 1) == 1 && !ly_lyc_condition && !mode_condition){//stat interrupt 
+            _memory->write(0xFF0F,_memory->IF() | 2);
+            first_vblank = 0;
+            }
+        }else{
+            mode_condition = 0;
+        }
+
+        if(_memory->LY() == 144){
+            _memory->write(0xFF0F,_memory->IF() | 1);
+        }
+
+        uint8_t stat = _memory->STAT() & 0xFC;
+        stat = stat | 1;
+        _memory->write(0xFF41,stat);//update stat on MODE 1
+
+        _memory->write(0xFF44,_memory->LY() + 1);
+
+        window_line_counter = 0;
+        wy_ly = 0;
+        if (dots >= 456){
+        _memory->write(0xFF44,_memory->LY() + 1);
+            dots = 0;
+            window_in_scanline = 0;
+            first_time =0;
+            x_pos_counter = 0;
+            new_scanline = 1;
+        }
+    }
+   
+
+    if(((_memory->read(0xFF41) >> 6) & 1) == 1 && _memory->LY() == _memory->read(0xFF45) && !ly_lyc_condition && !mode_condition){//LY = LYC 
+        _memory->write(0xFF0F,_memory->IF() | 2);
+        ly_lyc_condition = 1;
+    }else{
+        ly_lyc_condition = 0;
+    }
+
+    dots++;
+}
 
 
 
+
+void PPU::verifSprite(){
+
+    if((_memory->LCDC() >> 1) & 1 == 1){
+            for(uint8_t i = 0; i < sprite_buffer.size(); i++){
+                if(getByte1(sprite_buffer[i]) <= x_pos_counter + 8){
+                    sprite_in_progress = 1;
+                    curr_sprite = sprite_buffer[i];
+                    sprite_buffer.erase(sprite_buffer.begin() + i);
+                    bg_dots_counter = 0;
+                    break;
+                }
+            }
+        }
+}
 fifoPixel PPU::decodeTileData(uint8_t hi, uint8_t lo, uint8_t i,fifoPixel *px){
     uint8_t color = ((hi >> i) & 1) << 1 | (lo >> i) & 1 ;
     px->color_id = color;

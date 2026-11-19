@@ -27,10 +27,13 @@ public:
     uint8_t LCDC();
     uint8_t SCX();
     uint8_t SCY();
+    uint8_t STAT();
 
 
 
     //TODO : INC TIMA IF FALLINGEDGE WHEN WRITING TO TAC / DIV;
     //WRITING TO TIMA -> if(overflow == 1) {overflow = 0}
+
+    //TODO : IF LYC REG UPDATED -> if ly == lyc set bit to 1, else 0,
 
 };
